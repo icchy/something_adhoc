@@ -1,4 +1,4 @@
-package sensin;
+package something_adhoc;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

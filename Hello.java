@@ -1,4 +1,4 @@
-package test;
+package something_adhoc;
 
 public class Hello {
 	public static void main(String[] args) {
