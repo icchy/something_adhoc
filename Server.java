@@ -24,21 +24,24 @@ public class Server {
 
 		this.init();
 	}
-	public void init(){
+	public String init(){
 		try {
+			BufferedReader dalclient = null;
 			ServerSocket ss = new ServerSocket(this.port);
-			while(true){
+//			while(true){
 				Socket c= ss.accept();
-				DataOutputStream alclient=new DataOutputStream(c.getOutputStream());
+				DataOutputStream alclient = new DataOutputStream(c.getOutputStream());
 
-				 BufferedReader dalclient =new BufferedReader(new InputStreamReader(c.getInputStream()));
+				dalclient = new BufferedReader(new InputStreamReader(c.getInputStream()));
 
-				 System.out.println(dalclient.readLine());
-			}
+//				System.out.println(dalclient.readLine());
+//			}
+			return dalclient.readLine();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return "failed";
 		}
 	}
 }
