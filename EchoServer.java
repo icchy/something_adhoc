@@ -11,7 +11,7 @@ import java.net.SocketAddress;
 public class EchoServer {
 	public static void main(String[] args) throws IOException {
 		int BUFSIZE = 32;
-		int port = 1000;
+		int port = 10000;
 		int interval = 100;
 
 		InetAddress addr = InetAddress.getByName("0.0.0.0");

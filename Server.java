@@ -22,21 +22,33 @@ public class Server {
 			e.printStackTrace();
 		}
 
-		this.init();
+		//this.init();
 	}
 	public String init(){
 		try {
 			BufferedReader dalclient = null;
 			ServerSocket ss = new ServerSocket(this.port);
-//			while(true){
-				Socket c= ss.accept();
+			//String output = null;
+			StringBuilder output = new StringBuilder();
+			Socket c= ss.accept();
+			while(true){
+				
 				DataOutputStream alclient = new DataOutputStream(c.getOutputStream());
 
 				dalclient = new BufferedReader(new InputStreamReader(c.getInputStream()));
+				String res = dalclient.readLine();
+				
+				System.out.println("debug: "+res);
 
-//				System.out.println(dalclient.readLine());
-//			}
-			return dalclient.readLine();
+				if(res==null){
+					ss.close();
+					break;
+				}
+				//output += res;
+				output.append(res);
+			}
+			System.out.println("i am outside yeah");
+			return output.toString();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
