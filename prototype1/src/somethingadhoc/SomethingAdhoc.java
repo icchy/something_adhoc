@@ -20,11 +20,20 @@ public class SomethingAdhoc {
             System.out.println("-----------------------------------");
             System.out.println("--    Something Ad-Hoc console   --");
             System.out.println("-----------------------------------");
-            if(!mode.equals("")){
-                System.out.println("-- Mode: "+mode+"                  --");
-                System.out.println("-----------------------------------");
+            switch(mode){
+                case "":
+                    System.out.println("Commands: mode, exit");
+                    break;
+                case "1":
+                    System.out.println("-- Mode: "+mode+"                  --");
+                    System.out.println("Commands: mode, exit");
+                    break;
+                case "2":
+                    System.out.println("-- Mode: "+mode+"                  --");
+                    System.out.println("Commands: mode, scan, send, exit");
+                    break;
             }
-            System.out.println("Commands: mode, exit");
+            
             System.out.println("-----------------------------------");
             System.out.print("dummy@localhost: ~/ ");
             command = in.nextLine();
@@ -53,6 +62,11 @@ public class SomethingAdhoc {
                             break;
                     }
                     break;
+                case "scan":
+                    break;
+                case "send":
+                    break;
+                    
             }
         }
         
@@ -94,9 +108,9 @@ public class SomethingAdhoc {
                             server.start();
                         }
                     } catch (UnknownHostException ex) {
-                        //
+                        System.err.println("Fetal Error: "+ex.getMessage());
                     } catch (IOException ex) {
-                        //
+                        System.err.println("Fetal Error: "+ex.getMessage());
                     } 
                 }
             });
@@ -105,26 +119,22 @@ public class SomethingAdhoc {
         }
     }
     public static void SenderMode(){
-                    // 4. thread 2: user input sutffs for interrupt thread1 and switch to client mode
-            t2 = new Thread(new Runnable() {
+        AdhocClient client = new AdhocClient("wlan0", "Linux");
+        client.refreshAdhocList();
+        // 4. thread 2: user input sutffs for interrupt thread1 and switch to client mode
+        t2 = new Thread(new Runnable() {
 
-                public void run() {
-                    while(true){
-                        
-                        System.out.print("Switch Mode: ");
-                        String input = in.nextLine();
-                        if(input.equals("client")){
-                            // 1. input target name
-                            // 2. input data
-                            // 3. interrupt thread 1
-                            // 4. start new thread for client
-                            // 5. after client jobs finished, start thread 1 again
-                            System.out.println("hoge hoge");
-                        }
-                    }
-                }
-            });
-            t2.start();
-            // 5. add a loop condition for 3.-4.
+            public void run() {
+                // 1. input target name
+                // 2. input data
+                // 3. interrupt thread 1
+                // 4. start new thread for client
+                // 5. after client jobs finished, start thread 1 again
+                client.showAdhocList();
+                client.refreshAdhocList();
+            }
+        });
+        t2.start();
+        // 5. add a loop condition for 3.-4.
     }
 }

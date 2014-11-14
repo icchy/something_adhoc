@@ -1,11 +1,5 @@
 package somethingadhoc;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-
 public class AdhocAP extends Adhoc{
     String apName;
     String clientName;

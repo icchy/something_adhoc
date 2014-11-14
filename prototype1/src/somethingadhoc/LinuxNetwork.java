@@ -144,7 +144,7 @@ public class LinuxNetwork extends OSNetwork{
                 ap.security="--"; // fix this later
                 ap.active="no"; // fix this later
                 availableAPs.add(ap);
-                System.out.println("Debug: scanAvailableAdhoc() found "+ap.ssid);
+                //System.out.println("Debug: scanAvailableAdhoc() found "+ap.ssid);
 	}
         return availableAPs;
     }

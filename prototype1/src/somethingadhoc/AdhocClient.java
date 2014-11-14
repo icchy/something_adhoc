@@ -12,15 +12,18 @@ public class AdhocClient extends Adhoc{
     }
     
     public void refreshAdhocList(){
-         adhocAvailable = net.scanAvailableAdhoc();
-         lastScan = new Date();
+        disconnectAP();
+        adhocAvailable = net.scanAvailableAdhoc();
+        lastScan = new Date();
     }
     
     // print to console
     public void showAdhocList(){
-        for (int i = 1; i <= adhocAvailable.size(); i++) {
-            String adhocName = adhocAvailable.get(i).ssid;
-            System.out.println(i+": "+adhocName);
+        int totalAdhoc = adhocAvailable.size();
+        System.out.println("Found ad-hoc: "+totalAdhoc);
+        for (int i = 1; i <= totalAdhoc; i++) {
+            String adhocName = adhocAvailable.get(i-1).ssid;
+            System.out.println("\n"+i+": "+adhocName);
         }
     }
     
