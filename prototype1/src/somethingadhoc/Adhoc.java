@@ -1,6 +1,12 @@
 package somethingadhoc;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class Adhoc {
     
@@ -62,6 +68,7 @@ public abstract class Adhoc {
             System.err.println("Adhoc in AP mode cannot connect to another AP");
             return -1;
         }
+        
         // 1. connect to AP with temporary ip 
         // how about temp IP collision?
         String temporaryIP = "192.168.1."+(((int)(Math.random()*252))+3);
@@ -70,10 +77,12 @@ public abstract class Adhoc {
             System.err.println("Error: Cannot connect Adhoc: "+ssid);
             return -2;
         }
+        
         // 2. verify there is no other client by ping test .2
         if(pingTest(clientIPAddress)){
             return -3; // ping test success, there is another client exists!
         }
+        
         // 3. reconnect to AP with client ip
         connectStatus = net.connectAP(ssid, clientIPAddress, subnetMask);
         if( connectStatus != 0){
@@ -94,6 +103,26 @@ public abstract class Adhoc {
     public ArrayList<ScannedAPData>  scanAdhoc(){
         // filter only SSIDs started with 'senshin_'
         return net.scanAvailableAdhoc();
+    }
+    
+    public String getMacAddress(){
+        StringBuilder sb = new StringBuilder();
+        try {
+            InetAddress ip = InetAddress.getByName("192.168.0.27");
+            NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+            
+            byte[] mac = network.getHardwareAddress();
+            
+            for (int i = 0; i < mac.length; i++) {		
+                sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+            }
+            
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Adhoc.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SocketException ex) {
+            Logger.getLogger(Adhoc.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sb.toString();
     }
     
 }

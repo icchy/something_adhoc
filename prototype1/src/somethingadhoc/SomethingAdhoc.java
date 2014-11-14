@@ -8,9 +8,56 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class SomethingAdhoc {
-
+    public static Thread t1,t2;
+    public static Scanner in;
+    
     public static void main(String[] args) throws UnknownHostException, IOException {
-        
+            
+        in = new Scanner(System.in);
+        String command = "";
+        String mode = "";
+        while(!command.equals("exit")){
+            System.out.println("-----------------------------------");
+            System.out.println("--    Something Ad-Hoc console   --");
+            System.out.println("-----------------------------------");
+            if(!mode.equals("")){
+                System.out.println("-- Mode: "+mode+"                  --");
+                System.out.println("-----------------------------------");
+            }
+            System.out.println("Commands: mode, exit");
+            System.out.println("-----------------------------------");
+            System.out.print("dummy@localhost: ~/ ");
+            command = in.nextLine();
+            switch(command){
+                case "mode":
+                    System.out.println("-----------------------------------");
+                    System.out.println("-- Type: 1       for  AP Mode     -");
+                    System.out.println("-- Type: 2       for  Sender Mode -");
+                    System.out.println("-----------------------------------");
+                    System.out.print("dummy@localhost: ~/mode/ ");
+                    command = in.nextLine();
+                    switch(command){
+                        case "1":
+                            mode = "Soft Access Point";
+                            if(t2.isAlive()){
+                                t2.stop();
+                            }
+                            SomethingAdhoc.modeAP();
+                            break;
+                        case "2":
+                            mode = "Sender";
+                            if(t1.isAlive()){
+                                t1.stop();
+                            }
+                            SomethingAdhoc.SenderMode();
+                            break;
+                    }
+                    break;
+            }
+        }
+    
+    }
+    public static void modeAP(){
         // 1. do AP stuffs
         AdhocAP ap = new AdhocAP("wlan0", "Linux");
         int setupAdhocStatus = ap.setupAdhoc(); // random ssid
@@ -18,7 +65,7 @@ public class SomethingAdhoc {
         if(setupAdhocStatus == 0){
             
             // 3. thread 1: server socket stuffs
-            Thread t1 = new Thread(new Runnable() {
+            t1 = new Thread(new Runnable() {
 
                 public void run() {
                     try {
@@ -47,13 +94,15 @@ public class SomethingAdhoc {
             });
             
             t1.start();
-            
-            // 4. thread 2: user input sutffs for interrupt thread1 and switch to client mode
-            Thread t2 = new Thread(new Runnable() {
+        }
+    }
+    public static void SenderMode(){
+                    // 4. thread 2: user input sutffs for interrupt thread1 and switch to client mode
+            t2 = new Thread(new Runnable() {
 
                 public void run() {
                     while(true){
-                        Scanner in = new Scanner(System.in);
+                        
                         System.out.print("Switch Mode: ");
                         String input = in.nextLine();
                         if(input.equals("client")){
@@ -69,11 +118,5 @@ public class SomethingAdhoc {
             });
             t2.start();
             // 5. add a loop condition for 3.-4.
-        }
-        
-        
-        
     }
-
-    
 }
