@@ -39,14 +39,14 @@ public class SomethingAdhoc {
                     switch(command){
                         case "1":
                             mode = "Soft Access Point";
-                            if(t2.isAlive()){
+                            if(t2 != null && t2.isAlive()){
                                 t2.stop();
                             }
                             SomethingAdhoc.modeAP();
                             break;
                         case "2":
                             mode = "Sender";
-                            if(t1.isAlive()){
+                            if(t1 != null && t1.isAlive()){
                                 t1.stop();
                             }
                             SomethingAdhoc.SenderMode();
@@ -55,7 +55,15 @@ public class SomethingAdhoc {
                     break;
             }
         }
-    
+        
+        if(t2 != null && t2.isAlive()){
+            //t2.stop();
+            t2.interrupt();
+        }
+        if(t1 != null && t1.isAlive()){
+            //t1.stop();
+            t1.interrupt();
+        }
     }
     public static void modeAP(){
         // 1. do AP stuffs
@@ -93,7 +101,7 @@ public class SomethingAdhoc {
                 }
             });
             
-            t1.start();
+            System.exit(0);
         }
     }
     public static void SenderMode(){

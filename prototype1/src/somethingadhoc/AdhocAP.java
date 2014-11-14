@@ -19,6 +19,7 @@ public class AdhocAP extends Adhoc{
     public int setupAdhoc(){
         // @TODO: senshin_ + mac address + random name?
         apName = "senshin_"+macAddress+"_"+(((int)(Math.random()*1000))+1);
+        apName = apName.replaceAll("-", "");
         System.out.println("Starting AdHoc: "+apName);
         return super.setupAdhoc(apName);
     }
