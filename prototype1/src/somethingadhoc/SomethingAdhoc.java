@@ -74,7 +74,12 @@ public class SomethingAdhoc {
                 case "send":
                         // TODO: later
                         SomethingAdhoc.SenderMode();
-                        System.out.println("Send!s");
+                        System.out.println("Send mode!");
+                        // get first ad-hoc in list ( user will select this later)
+                        String relayName = client.adhocAvailable.get(0).ssid;
+                        System.out.println("connecting to : "+relayName);
+                        int status = client.connectRelay(relayName);
+                        System.out.println("Debug: connect status = "+status);
                         break;
             } // end switch in main menu
             
