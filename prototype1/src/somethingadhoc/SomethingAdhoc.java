@@ -18,28 +18,13 @@ public class SomethingAdhoc {
         in = new Scanner(System.in);
         String command = "";
         String mode = "";
+        
         while(!command.equals("exit")){
-            System.out.println("-----------------------------------");
-            System.out.println("--    Something Ad-Hoc console   --");
-            System.out.println("-----------------------------------");
-            switch(mode){
-                case "":
-                    System.out.println("Commands: mode, exit");
-                    break;
-                case "1":
-                    System.out.println("-- Mode: "+mode+"                  --");
-                    System.out.println("Commands: mode, exit");
-                    break;
-                case "2":
-                    System.out.println("-- Mode: "+mode+"                  --");
-                    System.out.println("Commands: mode, scan, send, exit");
-                    break;
-            }
-            
-            System.out.println("-----------------------------------");
-            System.out.print("dummy@localhost: ~/ (enter mode) ");
+            printBanner(mode);
             command = in.nextLine();
+            
             switch(command){
+                
                 case "mode":
                     System.out.println("-----------------------------------");
                     System.out.println("-- Type: 1       for  AP Mode     -");
@@ -47,54 +32,54 @@ public class SomethingAdhoc {
                     System.out.println("-----------------------------------");
                     System.out.print("dummy@localhost: ~/mode/ ");
                     mode = in.nextLine();
-                    switch(command){
-                        case "1":
-                            mode = "Soft Access Point";
-                            if(t2 != null && t2.isAlive()){
-                                t2.stop();
-                            }
-                            SomethingAdhoc.modeAP();
-                            break;
-                        case "2":
-                            mode = "Sender";
-                            if(t1 != null && t1.isAlive()){
-                                t1.stop();
-                            }
-                            SomethingAdhoc.SenderMode();
-                            break;
-                    } // end switch in mode sub menu
                     break;
                 case "scan":
-                        SomethingAdhoc.SenderMode();
-                        System.out.println("Scanning...");
-                        client.showAdhocList();
-                        client.refreshAdhocList();
-                        Thread.sleep(1);
-                        break;
+                    
+                    SomethingAdhoc.SenderMode();
+                    System.out.println("Scanning...");
+                    client.showAdhocList();
+                    client.refreshAdhocList();
+                    Thread.sleep(1);
+                    break;
                 case "send":
-                        // TODO: later
-                        SomethingAdhoc.SenderMode();
-                        System.out.println("Send mode!");
-                        // get first ad-hoc in list ( user will select this later)
-                        String relayName = client.adhocAvailable.get(0).ssid;
-                        System.out.println("connecting to : "+relayName);
-                        int status = client.connectRelay(relayName);
-                        System.out.println("Debug: connect status = "+status);
-                        break;
-            } // end switch in main menu
+                    SomethingAdhoc.SenderMode();
+                    System.out.println("Send mode!");
+                    // get first ad-hoc in list ( user will select this later)
+                    String relayName = client.adhocAvailable.get(0).ssid;
+                    System.out.println("connecting to : "+relayName);
+                    int status = client.connectRelay(relayName);
+                    System.out.println("Debug: connect status = "+status);
+                    break;
+            }
             
-        }
+        } 
+        System.exit(0);
         
-        if(t2 != null && t2.isAlive()){
-            //t2.stop();
-            t2.interrupt();
+    }
+    public static void printBanner(String mode){
+        System.out.println("-----------------------------------");
+        System.out.println("--    Something Ad-Hoc console   --");
+        System.out.println("-----------------------------------");
+        switch(mode){                
+            case "1":
+                System.out.println("-- Mode: AP Mode              --");
+                System.out.println("Commands: mode, exit");
+                SomethingAdhoc.modeAP();
+                break;
+            case "2":
+                System.out.println("-- Mode: Sender Mode          --");
+                System.out.println("Commands: mode, scan, send, exit");
+                SomethingAdhoc.SenderMode();
+                break;
+            default:
+                System.out.println("Welcome! Commands: mode, exit");
+                break;
         }
-        if(t1 != null && t1.isAlive()){
-            //t1.stop();
-            t1.interrupt();
-        }
+        System.out.println("-----------------------------------");
+        System.out.print("dummy@localhost: ~/");
     }
     public static void modeAP(){
+        
         // 1. do AP stuffs
         ap = new AdhocAP("wlan0", "Linux");
         int setupAdhocStatus = ap.setupAdhoc(); // random ssid
@@ -130,7 +115,7 @@ public class SomethingAdhoc {
                 }
             });
             
-            System.exit(0);
+            
         }
     }
     public static void SenderMode(){
