@@ -110,6 +110,7 @@ public class LinuxNetwork extends OSNetwork{
 		 };
         return execCmds(commands);
     }
+    
     @Override
     public ArrayList<ScannedAPData> scanAvailableAdhoc(){
         /*
@@ -148,6 +149,7 @@ public class LinuxNetwork extends OSNetwork{
 	}
         return availableAPs;
     }
+    
     @Override
     public String scanAvailableAP(){
         String command = "nmcli dev wifi list iface "+networkInfName;

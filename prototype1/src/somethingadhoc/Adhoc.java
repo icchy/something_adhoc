@@ -106,21 +106,15 @@ public abstract class Adhoc {
     }
     
     public String getMacAddress(){
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         try {
-            InetAddress ip = InetAddress.getByName("192.168.0.27");
-            NetworkInterface network = NetworkInterface.getByInetAddress(ip);
-            
-            byte[] mac = network.getHardwareAddress();
-            
-            for (int i = 0; i < mac.length; i++) {		
+            final NetworkInterface netInf = NetworkInterface.getNetworkInterfaces().nextElement();
+            final byte[] mac = netInf.getHardwareAddress();
+            for (int i = 0; i < mac.length; i++) {        
                 sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
             }
-            
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(Adhoc.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SocketException ex) {
-            Logger.getLogger(Adhoc.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Error: "+ex.getMessage());
         }
         return sb.toString();
     }

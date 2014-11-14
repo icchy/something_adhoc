@@ -10,8 +10,10 @@ import java.util.Scanner;
 public class SomethingAdhoc {
     public static Thread t1,t2;
     public static Scanner in;
+    public static AdhocClient client;
+    public static AdhocAP ap;
     
-    public static void main(String[] args) throws UnknownHostException, IOException {
+    public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
             
         in = new Scanner(System.in);
         String command = "";
@@ -35,7 +37,7 @@ public class SomethingAdhoc {
             }
             
             System.out.println("-----------------------------------");
-            System.out.print("dummy@localhost: ~/ ");
+            System.out.print("dummy@localhost: ~/ (enter mode) ");
             command = in.nextLine();
             switch(command){
                 case "mode":
@@ -44,7 +46,7 @@ public class SomethingAdhoc {
                     System.out.println("-- Type: 2       for  Sender Mode -");
                     System.out.println("-----------------------------------");
                     System.out.print("dummy@localhost: ~/mode/ ");
-                    command = in.nextLine();
+                    mode = in.nextLine();
                     switch(command){
                         case "1":
                             mode = "Soft Access Point";
@@ -60,14 +62,22 @@ public class SomethingAdhoc {
                             }
                             SomethingAdhoc.SenderMode();
                             break;
-                    }
+                    } // end switch in mode sub menu
                     break;
                 case "scan":
-                    break;
+                        SomethingAdhoc.SenderMode();
+                        System.out.println("Scanning...");
+                        client.showAdhocList();
+                        client.refreshAdhocList();
+                        Thread.sleep(1);
+                        break;
                 case "send":
-                    break;
-                    
-            }
+                        // TODO: later
+                        SomethingAdhoc.SenderMode();
+                        System.out.println("Send!s");
+                        break;
+            } // end switch in main menu
+            
         }
         
         if(t2 != null && t2.isAlive()){
@@ -81,7 +91,7 @@ public class SomethingAdhoc {
     }
     public static void modeAP(){
         // 1. do AP stuffs
-        AdhocAP ap = new AdhocAP("wlan0", "Linux");
+        ap = new AdhocAP("wlan0", "Linux");
         int setupAdhocStatus = ap.setupAdhoc(); // random ssid
         // 2. do socket stuffs
         if(setupAdhocStatus == 0){
@@ -119,19 +129,18 @@ public class SomethingAdhoc {
         }
     }
     public static void SenderMode(){
-        AdhocClient client = new AdhocClient("wlan0", "Linux");
+        client = new AdhocClient("wlan0", "Linux");
         client.refreshAdhocList();
         // 4. thread 2: user input sutffs for interrupt thread1 and switch to client mode
         t2 = new Thread(new Runnable() {
-
+            
             public void run() {
                 // 1. input target name
                 // 2. input data
                 // 3. interrupt thread 1
                 // 4. start new thread for client
                 // 5. after client jobs finished, start thread 1 again
-                client.showAdhocList();
-                client.refreshAdhocList();
+                
             }
         });
         t2.start();

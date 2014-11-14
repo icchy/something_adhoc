@@ -73,7 +73,7 @@ public class ServerProcess extends Thread{
 			
 			
 		} catch (IOException e) {
-			System.out.println("Error: "+e.getMessage());
+			System.out.println( "Error: "+e.getMessage() );
 			e.printStackTrace();
 		}
 	}
