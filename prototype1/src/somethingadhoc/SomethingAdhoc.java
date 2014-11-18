@@ -12,10 +12,15 @@ public class SomethingAdhoc {
     public static Scanner in;
     public static AdhocClient client;
     public static AdhocAP ap;
+    public static String wifiInf;
     
     public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
-            
+        
         in = new Scanner(System.in);
+        
+        System.out.println("Enter WiFi interface: ");
+        wifiInf = in.nextLine();
+        
         String command = "";
         String mode = "";
         
@@ -34,7 +39,6 @@ public class SomethingAdhoc {
                     mode = in.nextLine();
                     break;
                 case "scan":
-                    
                     SomethingAdhoc.SenderMode();
                     System.out.println("Scanning...");
                     client.showAdhocList();
@@ -81,7 +85,7 @@ public class SomethingAdhoc {
     public static void modeAP(){
         
         // 1. do AP stuffs
-        ap = new AdhocAP("wlan0", "Linux");
+        ap = new AdhocAP(wifiInf, "Linux");
         int setupAdhocStatus = ap.setupAdhoc(); // random ssid
         // 2. do socket stuffs
         if(setupAdhocStatus == 0){
@@ -119,7 +123,7 @@ public class SomethingAdhoc {
         }
     }
     public static void SenderMode(){
-        client = new AdhocClient("wlan0", "Linux");
+        client = new AdhocClient(wifiInf, "Linux");
         client.refreshAdhocList();
         // 4. thread 2: user input sutffs for interrupt thread1 and switch to client mode
         t2 = new Thread(new Runnable() {

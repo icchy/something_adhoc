@@ -136,7 +136,7 @@ public class LinuxNetwork extends OSNetwork{
                 String lineMatched = m.group(0);
                 // 4. extract a line into ScannedAPData property
                 // @TODO: cleanup this mess string manipulation
-                ap.ssid=lineMatched.substring(lineMatched.indexOf("'"), lineMatched.lastIndexOf("'"));
+                ap.ssid=lineMatched.substring(lineMatched.indexOf("'")+1, lineMatched.lastIndexOf("'"));
                 ap.bssid=lineMatched.substring(lineMatched.indexOf(":")-2,lineMatched.lastIndexOf(":")+2);
                 ap.mode="Ad-Hoc";
                 ap.freq="2412 MHz"; // fix this later
