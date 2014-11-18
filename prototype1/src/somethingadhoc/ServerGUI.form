@@ -333,7 +333,7 @@
     </Container>
     <Component class="javax.swing.JButton" name="jButton1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Set Message"/>
+        <Property name="text" type="java.lang.String" value="Send"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jButton2">

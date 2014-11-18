@@ -130,7 +130,7 @@ public class ServerGUI extends javax.swing.JFrame {
         ));
         jScrollPane6.setViewportView(jTable3);
 
-        jButton1.setText("Set Message");
+        jButton1.setText("Send");
 
         jButton2.setText("Clear");
 
