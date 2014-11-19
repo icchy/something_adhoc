@@ -40,14 +40,24 @@ public class SomethingAdhoc {
                     mode = in.nextLine();
                     break;
                 case "scan":
-                    SomethingAdhoc.SenderMode();
-                    System.out.println("Scanning...");
-                    client.showAdhocList();
+                    if(client==null || !mode.equals("2")){
+                        System.err.println("Please switch to Sender Mode");
+                        break;
+                    }
+                    // 1. refresh adhoc list (re-scan and add to list)
                     client.refreshAdhocList();
+                    System.out.println("Scanning...");
+                    // 2. waiting by delay for 1 second
                     Thread.sleep(1);
+                    // 3. show adhoc list in console
+                    client.showAdhocList();
                     break;
                 case "send":
-                    SomethingAdhoc.SenderMode();
+                    if(client==null || !mode.equals("2")){
+                        System.err.println("Please switch to Sender Mode");
+                        break;
+                    }
+                    client.refreshAdhocList();
                     System.out.println("Send mode!");
                     // get first ad-hoc in list ( user will select this later)
                     //String relayName = client.adhocAvailable.get(0).ssid;
