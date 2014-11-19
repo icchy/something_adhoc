@@ -14,6 +14,7 @@ public class SomethingAdhoc {
     public static AdhocClient client;
     public static AdhocAP ap;
     public static String wifiInf;
+    public static boolean apOn;
     
     public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
         
@@ -39,6 +40,9 @@ public class SomethingAdhoc {
                     System.out.print("dummy@localhost: ~/mode/ ");
                     mode = in.nextLine();
                     break;
+                case "turnoff":
+                    ap.net.downInterface();
+                    apOn = false;
                 case "scan":
                     System.out.println("[+] Scan !");
                     // 0. precondition
@@ -97,8 +101,10 @@ public class SomethingAdhoc {
         switch(mode){                
             case "1":
                 System.out.println("-- Mode: AP Mode              --");
-                System.out.println("Commands: mode, exit");
-                SomethingAdhoc.modeAP();
+                System.out.println("Commands: mode, turnoff, exit");
+                if(!apOn){
+                    SomethingAdhoc.modeAP();
+                }
                 break;
             case "2":
                 System.out.println("-- Mode: Sender Mode          --");
