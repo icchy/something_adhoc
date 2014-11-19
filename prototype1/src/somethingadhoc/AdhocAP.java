@@ -29,8 +29,10 @@ public class AdhocAP extends Adhoc{
     
     public int downAP(){
         // just down the interface, better approach is coming soon
-        clientName = null;
-        return super.net.downInterface();
+        //clientName = null;
+        //return super.net.downInterface();
+        
+        return super.downAP();
     }
     
     public int forceKickClient(){ return 0; }

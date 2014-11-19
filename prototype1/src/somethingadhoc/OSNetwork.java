@@ -14,7 +14,7 @@ public abstract class OSNetwork {
     // 5. scan available wifi inf
     // 6. connect to SSIDs
     // 7. disconnect to SSIDs
-
+    
     public abstract int checkRequirement();
 
     public abstract boolean hasPrograms(String[] programsList);
@@ -28,6 +28,8 @@ public abstract class OSNetwork {
     public abstract int connectAP(String ssid, String ipAddress, String subnetMask);
     public abstract int downInterface();
     public abstract int upInterface();
+    public abstract int defaultWifiMode();
+    public abstract int turnoffESSID();
     public abstract int setupIP(String ipAddress, String subnetMask);
     public abstract boolean isPrivileged();
     public abstract boolean pingTest(String targetIP);

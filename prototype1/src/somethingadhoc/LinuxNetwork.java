@@ -213,5 +213,26 @@ public class LinuxNetwork extends OSNetwork{
         int exitCode = Integer.parseInt(execCmd(command)[1]);
         return exitCode;
     }
+    
+    @Override
+    public int defaultWifiMode() {
+        String command = "iwconfig "+networkInfName+" mode manage";
+        int exitCode = Integer.parseInt(execCmd(command)[1]);
+        return exitCode;
+    }
+    
+    /*
+    Note: this command take delay few seconds before ESSID is gone.
+    */
+    public int turnoffESSID(){
+        String command = "iwconfig "+networkInfName+" essid off";
+        int exitCode = Integer.parseInt(execCmd(command)[1]);
+        if(exitCode != 0){
+            
+            return exitCode;
+        }
+        return exitCode;
+    }
+
 
 }

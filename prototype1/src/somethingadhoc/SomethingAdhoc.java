@@ -41,8 +41,10 @@ public class SomethingAdhoc {
                     mode = in.nextLine();
                     break;
                 case "turnoff":
-                    ap.net.downInterface();
+                    ap.downAP();
                     apOn = false;
+                    mode = "";
+                    break;
                 case "scan":
                     System.out.println("[+] Scan !");
                     // 0. precondition
@@ -104,6 +106,7 @@ public class SomethingAdhoc {
                 System.out.println("Commands: mode, turnoff, exit");
                 if(!apOn){
                     SomethingAdhoc.modeAP();
+                    apOn = true;
                 }
                 break;
             case "2":

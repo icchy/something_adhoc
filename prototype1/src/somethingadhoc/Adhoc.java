@@ -119,4 +119,29 @@ public abstract class Adhoc {
         return sb.toString();
     }
     
+        
+    public int downAP() {
+        // 1. up AP
+        net.upInterface();
+
+        // 2. turn-off ESSID
+        int exitCode = net.turnoffESSID();
+        if(exitCode != 0 ){
+            System.err.println("Cannot turn off ESSID");
+            return exitCode;
+        }
+        
+        // 3. back to default mode (managed mode)
+        exitCode = net.defaultWifiMode();
+        if(exitCode != 0){
+            System.err.println("Cannot set to default WiFi mode");
+            return exitCode;
+        }
+        
+        // 4. reset interface again
+        net.downInterface();
+        net.upInterface();
+        
+        return exitCode;
+    }
 }
