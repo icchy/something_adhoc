@@ -40,6 +40,8 @@ public class SomethingAdhoc {
                     mode = in.nextLine();
                     break;
                 case "scan":
+                    System.out.println("[+] Scan !");
+                    // 0. precondition
                     if(client==null || !mode.equals("2")){
                         System.err.println("Please switch to Sender Mode");
                         break;
@@ -53,18 +55,34 @@ public class SomethingAdhoc {
                     client.showAdhocList();
                     break;
                 case "send":
+                    System.out.println("[+] Send !");
+                    // 0. precondition
                     if(client==null || !mode.equals("2")){
                         System.err.println("Please switch to Sender Mode");
                         break;
                     }
-                    client.refreshAdhocList();
-                    System.out.println("Send mode!");
-                    // get first ad-hoc in list ( user will select this later)
-                    //String relayName = client.adhocAvailable.get(0).ssid;
+                    // String relayName = client.adhocAvailable.get(0).ssid;
+                    // 1. select destination node, at this rate.. just essid
                     String relayName = JOptionPane.showInputDialog(null, "Enter ESSID:");
-                    System.out.println("connecting to : "+relayName);
+                    System.out.println("Connecting to : "+relayName);
+                    // 2. get/discover routing
+                    // 3. connect to relays
                     int status = client.connectRelay(relayName);
                     System.out.println("Debug: connect status = "+status);
+                    // 4. client socket connect to AP IP
+                    
+//                    t2 = new Thread(new Runnable() {
+//
+//                        public void run() {
+                            // 1. input target name
+                            // 2. input data
+                            // 3. interrupt thread 1
+                            // 4. start new thread for client
+                            // 5. after client jobs finished, start thread 1 again
+//                        }
+//                    });
+//                    t2.start();
+     
                     break;
             }
             
@@ -103,6 +121,11 @@ public class SomethingAdhoc {
         if(setupAdhocStatus == 0){
             
             // 3. thread 1: server socket stuffs
+            /*
+            Note: we needs thread here because
+            server socket must running while user can interact with interface
+            at the same time
+            */
             t1 = new Thread(new Runnable() {
 
                 public void run() {
@@ -137,19 +160,5 @@ public class SomethingAdhoc {
     public static void SenderMode(){
         client = new AdhocClient(wifiInf, "Linux");
         client.refreshAdhocList();
-        // 4. thread 2: user input sutffs for interrupt thread1 and switch to client mode
-        t2 = new Thread(new Runnable() {
-            
-            public void run() {
-                // 1. input target name
-                // 2. input data
-                // 3. interrupt thread 1
-                // 4. start new thread for client
-                // 5. after client jobs finished, start thread 1 again
-                
-            }
-        });
-        t2.start();
-        // 5. add a loop condition for 3.-4.
     }
 }
