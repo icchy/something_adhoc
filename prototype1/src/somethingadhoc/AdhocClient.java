@@ -13,6 +13,7 @@ public class AdhocClient extends Adhoc{
     
     public void refreshAdhocList(){
         disconnectAP();
+        super.net.upInterface();
         adhocAvailable = net.scanAvailableAdhoc();
         lastScan = new Date();
     }
@@ -27,6 +28,9 @@ public class AdhocClient extends Adhoc{
         }
     }
     
+    /*
+    Refer: http://superuser.com/a/616425
+    */
     @Override
     public int connectRelay(String ssid){
         // TODO: ensure SSID name in the scan list?

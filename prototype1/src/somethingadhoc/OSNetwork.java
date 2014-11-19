@@ -27,6 +27,7 @@ public abstract class OSNetwork {
     public abstract ArrayList<ScannedAPData> scanAvailableAdhoc();
     public abstract int connectAP(String ssid, String ipAddress, String subnetMask);
     public abstract int downInterface();
+    public abstract int upInterface();
     public abstract int setupIP(String ipAddress, String subnetMask);
     public abstract boolean isPrivileged();
     public abstract boolean pingTest(String targetIP);

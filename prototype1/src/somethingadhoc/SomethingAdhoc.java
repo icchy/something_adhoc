@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import javax.swing.JOptionPane;
 
 public class SomethingAdhoc {
     public static Thread t1,t2;
@@ -49,7 +50,8 @@ public class SomethingAdhoc {
                     SomethingAdhoc.SenderMode();
                     System.out.println("Send mode!");
                     // get first ad-hoc in list ( user will select this later)
-                    String relayName = client.adhocAvailable.get(0).ssid;
+                    //String relayName = client.adhocAvailable.get(0).ssid;
+                    String relayName = JOptionPane.showInputDialog(null, "Enter ESSID:");
                     System.out.println("connecting to : "+relayName);
                     int status = client.connectRelay(relayName);
                     System.out.println("Debug: connect status = "+status);

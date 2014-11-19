@@ -89,24 +89,32 @@ public class LinuxNetwork extends OSNetwork{
         iwconfig <inf> essid <ssid>
         ifconfig <inf> <ip> netmask <netmask>
         */
-        String command = "iwconfig "+networkInfName+" essid "+ssid;
+        
+        /*
+        String command = "";
+        
+        
+        command = "iwconfig "+networkInfName+" essid "+ssid;
         int exitCode = Integer.parseInt(execCmd(command)[1]);
         if(exitCode == 0){
             exitCode = setupIP(ipAddress, subnetMask);
             return exitCode;
         }
-        return -1;
+        */
+        return setupAP(ssid, "ad-hoc", ipAddress, subnetMask);
+        
+        //return -1;
     }
     
     @Override
     public int setupIP(String ipAddress, String subnetMask){
         String[] commands = {
                         // 1. down network interface
-			 "ip link set "+networkInfName+" down",
+			// "ip link set "+networkInfName+" down",
                         // 2. setup IP address, subnetmask
 			 "ifconfig "+networkInfName+" "+ipAddress+" netmask "+subnetMask,
                         // 3. up network interface
-			 "ip link set "+networkInfName+" up"
+			// "ip link set "+networkInfName+" up"
 		 };
         return execCmds(commands);
     }
@@ -199,5 +207,11 @@ public class LinuxNetwork extends OSNetwork{
         return exitCode;
     }
     
+    @Override
+    public int upInterface() {
+        String command = "ip link set "+networkInfName+" up";
+        int exitCode = Integer.parseInt(execCmd(command)[1]);
+        return exitCode;
+    }
 
 }
