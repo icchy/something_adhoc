@@ -44,6 +44,8 @@ public class SomethingAdhoc {
                     ap.downAP();
                     apOn = false;
                     mode = "";
+                    System.out.println("Turning-of AP...");
+                    Thread.sleep(10000);
                     break;
                 case "scan":
                     System.out.println("[+] Scan !");
@@ -56,7 +58,7 @@ public class SomethingAdhoc {
                     client.refreshAdhocList();
                     System.out.println("Scanning...");
                     // 2. waiting by delay for 1 second
-                    Thread.sleep(1);
+                    Thread.sleep(1000);
                     // 3. show adhoc list in console
                     client.showAdhocList();
                     break;
