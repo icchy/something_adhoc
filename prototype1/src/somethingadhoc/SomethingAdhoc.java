@@ -9,7 +9,7 @@ import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 public class SomethingAdhoc {
-    public static Thread t1,t2;
+    public static ServerSocketThread t1;
     public static Scanner in;
     public static AdhocClient client;
     public static AdhocAP ap;
@@ -41,11 +41,20 @@ public class SomethingAdhoc {
                     mode = in.nextLine();
                     break;
                 case "turnoff":
-                    ap.downAP();
-                    apOn = false;
+                    if(ap instanceof AdhocAP){
+                        // 1. down AP (remove essid + set to managed mode)
+                        ap.downAP();
+                        ap = null;
+                        apOn = false;
+                        System.out.println("Shutdown AP...");
+                        Thread.sleep(5000);
+                    }
+                    if(t1 instanceof ServerSocketThread){
+                        // 2. down socket server thread
+                        System.out.println("Closing the Server Socket..");
+                        t1.stopServerSocket();
+                    }
                     mode = "";
-                    System.out.println("Turning-of AP...");
-                    Thread.sleep(10000);
                     break;
                 case "scan":
                     System.out.println("[+] Scan !");
@@ -104,6 +113,7 @@ public class SomethingAdhoc {
         System.out.println("-----------------------------------");
         switch(mode){                
             case "1":
+                client = null;
                 System.out.println("-- Mode: AP Mode              --");
                 System.out.println("Commands: mode, turnoff, exit");
                 if(!apOn){
@@ -112,9 +122,10 @@ public class SomethingAdhoc {
                 }
                 break;
             case "2":
+                ap = null;
                 System.out.println("-- Mode: Sender Mode          --");
                 System.out.println("Commands: mode, scan, send, exit");
-                SomethingAdhoc.SenderMode();
+                SomethingAdhoc.modeSender();
                 break;
             default:
                 System.out.println("Welcome! Commands: mode, exit");
@@ -125,10 +136,10 @@ public class SomethingAdhoc {
     }
     public static void modeAP(){
         
-        // 1. do AP stuffs
+        // 1. do AP setup stuffs
         ap = new AdhocAP(wifiInf, "Linux");
         int setupAdhocStatus = ap.setupAdhoc(); // random ssid
-        // 2. do socket stuffs
+        // 2. do socket server stuffs
         if(setupAdhocStatus == 0){
             
             // 3. thread 1: server socket stuffs
@@ -137,39 +148,17 @@ public class SomethingAdhoc {
             server socket must running while user can interact with interface
             at the same time
             */
-            t1 = new Thread(new Runnable() {
-
-                public void run() {
-                    try {
-                        int port = 13337;
-                        InetAddress serverAddr = InetAddress.getByName(ap.apIPAddress);
-                        ServerSocket serverSocket = new ServerSocket(port, 100, serverAddr);
-                        Socket clientSocket;
-                        while(true){ // infinity loop for new connection
-                            clientSocket = serverSocket.accept();
-                            // debug
-                            String clientIP = clientSocket.getInetAddress().getHostAddress();
-                            int srcPort = clientSocket.getPort();
-                            String clientName = clientIP+":"+srcPort;
-                            System.out.println("Debug: Aceept new connection from "+clientName);
-                            //
-                            ServerProcess server = new ServerProcess(clientSocket);
-                            server.setName(clientName);
-                            server.start();
-                        }
-                    } catch (UnknownHostException ex) {
-                        System.err.println("Fetal Error: "+ex.getMessage());
-                    } catch (IOException ex) {
-                        System.err.println("Fetal Error: "+ex.getMessage());
-                    } 
-                }
-            });
-            
-            
+            System.out.println("Starting Server Socket...");
+            t1 = new ServerSocketThread(ap.apIPAddress,13337);
+            t1.start();
+        }else{
+            System.err.println("Error: Failed to setup Ad-Hoc & Server Socket");
         }
     }
-    public static void SenderMode(){
+    public static void modeSender(){
+        // 1. do client setup stuffs
         client = new AdhocClient(wifiInf, "Linux");
+        // 2. get list of adhoc AP
         client.refreshAdhocList();
     }
 }
