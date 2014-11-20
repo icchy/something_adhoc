@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 public class SomethingAdhoc {
     public static ServerSocketThread t1;
+    public static ModeSenderThread t2;
     public static Scanner in;
     public static AdhocClient client;
     public static AdhocAP ap;
@@ -80,26 +81,33 @@ public class SomethingAdhoc {
                     }
                     // String relayName = client.adhocAvailable.get(0).ssid;
                     // 1. select destination node, at this rate.. just essid
-                    String relayName = JOptionPane.showInputDialog(null, "Enter ESSID:");
-                    System.out.println("Connecting to : "+relayName);
+                    String targetNode = JOptionPane.showInputDialog(null, "Enter Target Node:");
+                    System.out.println("Target is : "+targetNode);
                     // 2. get/discover routing
-                    // 3. connect to relays
+                    String route = SomethingRoute.getRoute(targetNode);
+                    // 2.1 get Message to send
+                    String message = JOptionPane.showInputDialog(null, "Enter Message:");
+                    // 2.2 convert target Node into ESSID ?
+                    // 2.3 get relay for next hop
+                    String relayName = SomethingRoute.getNextRelay(route);
+                    System.out.println("Connecting to : "+relayName);
+                    // 3. connect to relay
                     int status = client.connectRelay(relayName);
                     System.out.println("Debug: connect status = "+status);
-                    // 4. client socket connect to AP IP
+                    // 4. client socket connect to AP server socket
+                    /*
+                    Node: If not reach destination, then forward data+routing table
+                        otherwise, forward only data
+                    */
+                    if(relayName.equals(targetNode)){
+                        // send only data
+                        t2 = new ModeSenderThread(message);
                     
-//                    t2 = new Thread(new Runnable() {
-//
-//                        public void run() {
-                            // 1. input target name
-                            // 2. input data
-                            // 3. interrupt thread 1
-                            // 4. start new thread for client
-                            // 5. after client jobs finished, start thread 1 again
-//                        }
-//                    });
-//                    t2.start();
-     
+                    }else{
+                        // send data + routing
+                        t2 = new ModeSenderThread(message, route);
+                    }
+                    t2.start();
                     break;
             }
             

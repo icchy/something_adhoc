@@ -31,5 +31,8 @@ public class SomethingRoute {
     public static boolean checkRoute(String routeRecord){
         return false;
     }
+    public static String getNextRelay(String route){
+        return null;
+    }
     
 }
