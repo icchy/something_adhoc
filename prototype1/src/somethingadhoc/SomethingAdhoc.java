@@ -89,7 +89,8 @@ public class SomethingAdhoc {
                     String message = JOptionPane.showInputDialog(null, "Enter Message:");
                     // 2.2 convert target Node into ESSID ?
                     // 2.3 get relay for next hop
-                    String relayName = SomethingRoute.getNextRelay(route);
+                    //String relayName = SomethingRoute.getNextRelay(route);
+                    String relayName = targetNode; // no next hop yet!!
                     System.out.println("Connecting to : "+relayName);
                     // 3. connect to relay
                     int status = client.connectRelay(relayName);
