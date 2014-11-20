@@ -108,6 +108,8 @@ public class SomethingAdhoc {
                         t2 = new ModeSenderThread(message, route);
                     }
                     t2.start();
+                    // 5. client should receive ack. that confirm message reach server socket
+                    // 6. fall back to AP mode
                     break;
             }
             
