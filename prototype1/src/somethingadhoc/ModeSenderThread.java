@@ -53,9 +53,9 @@ public class ModeSenderThread extends Thread{
 
                 /* Create a thread to read from the server. */
                 new Thread(new ClientProcess()).start();
-                while (!closed) {
-                        os.println(message.trim());
-                }
+                //while (!closed ) {
+                        os.println(message.trim()); // send one time!
+                //}
                 /*
                  * Close the output stream, close the input stream, close the
                  * socket.
