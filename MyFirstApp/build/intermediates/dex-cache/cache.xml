@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="/home/longcat/AndroidStudioProjects/MyFirstApp/app/build/intermediates/pre-dexed/debug/WifiDirectManager-c79cf5069827d91bd7ff28daed99159c2c7a905c.jar"
+        jar="/home/longcat/AndroidStudioProjects/MyFirstApp/app/libs/WifiDirectManager.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="77d6d30ea338352b3d0905cd41e7e3b13b0aa4f0"/>
+    <item
+        dex="/home/longcat/AndroidStudioProjects/MyFirstApp/app/build/intermediates/pre-dexed/debug/support-v4-18.0.0-de9d4810bdcef34534f6820f7b069507d761dd37.jar"
+        jar="/home/longcat/apps/android-sdk/extras/android/m2repository/com/android/support/support-v4/18.0.0/support-v4-18.0.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="44ec51e9d395a47aab135e5e1b556c0007442156"/>
+
+</pre-dex-items>
