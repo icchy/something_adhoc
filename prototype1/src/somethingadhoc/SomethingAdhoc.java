@@ -64,13 +64,7 @@ public class SomethingAdhoc {
                         System.err.println("Please switch to Sender Mode");
                         break;
                     }
-                    // 1. refresh adhoc list (re-scan and add to list)
-                    client.refreshAdhocList();
-                    System.out.println("Scanning...");
-                    // 2. waiting by delay for 1 second
-                    Thread.sleep(1000);
-                    // 3. show adhoc list in console
-                    client.showAdhocList();
+                    refreshAndPrintAdhocList();
                     break;
                 case "send":
                     System.out.println("[+] Send !");
@@ -121,7 +115,7 @@ public class SomethingAdhoc {
         System.exit(0);
         
     }
-    public static void printBanner(String mode){
+    public static void printBanner(String mode) throws InterruptedException{
         System.out.println("-----------------------------------");
         System.out.println("--    Something Ad-Hoc console   --");
         System.out.println("-----------------------------------");
@@ -169,10 +163,20 @@ public class SomethingAdhoc {
             System.err.println("Error: Failed to setup Ad-Hoc & Server Socket");
         }
     }
-    public static void modeSender(){
+    public static void modeSender() throws InterruptedException{
         // 1. do client setup stuffs
         client = new AdhocClient(wifiInf, "Linux");
         // 2. get list of adhoc AP
+        refreshAndPrintAdhocList();
+    }
+    
+    public static void refreshAndPrintAdhocList() throws InterruptedException{
+        // 1. refresh adhoc list (re-scan and add to list)
         client.refreshAdhocList();
+        System.out.println("Scanning...");
+        // 2. waiting by delay for 1 second
+        Thread.sleep(1000);
+        // 3. show adhoc list in console
+        client.showAdhocList();
     }
 }

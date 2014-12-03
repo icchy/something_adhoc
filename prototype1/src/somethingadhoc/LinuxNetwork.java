@@ -151,7 +151,7 @@ public class LinuxNetwork extends OSNetwork{
                 ap.ssid=lineMatched.substring(lineMatched.indexOf("'")+1, lineMatched.lastIndexOf("'"));
                 ap.bssid=lineMatched.substring(lineMatched.indexOf(":")-2,lineMatched.lastIndexOf(":")+2);
                 ap.mode="Ad-Hoc";
-                ap.freq="2412 MHz"; // fix this later
+                ap.freq="2427 MHz"; // fix this later
                 ap.rate="54 MB/s"; // fix this later
                 ap.signal="0"; // fix this ASAP
                 ap.security="--"; // fix this later
