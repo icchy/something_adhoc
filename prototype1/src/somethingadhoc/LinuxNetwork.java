@@ -172,6 +172,8 @@ public class LinuxNetwork extends OSNetwork{
     // ref: https://help.ubuntu.com/community/WifiDocs/Adhoc
     @Override
     public int setupAP(String ssid, String mode, String ipAddress, String subnetMask) {
+        final String channel="4";
+        final String freq="2.427G";
         String[] commands = {
                         // 1. down network interface
 			 "ip link set "+networkInfName+" down",
@@ -180,7 +182,9 @@ public class LinuxNetwork extends OSNetwork{
                         // 3. setup ESSID (Boradcast Name)
 			 "iwconfig "+networkInfName+" essid " + ssid,
                         // 4. setup WiFi channel
-                         "iwconfig "+networkInfName+" channel 4"
+                         "iwconfig "+networkInfName+" channel "+channel,
+                        // 5. setup Freq 
+                         "iwconfig "+networkInfName+" freq "+freq
 		 };
         int exitCode = execCmds(commands);
         if(exitCode == 0){
