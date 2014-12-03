@@ -85,6 +85,7 @@ public class LinuxNetwork extends OSNetwork{
     /*
     Buggy: This function sometimes connect to existing Ad-Hoc
             But sometimes establish Ad-Hoc with the same name by itself :|?
+    Ref: https://help.ubuntu.com/community/WifiDocs/Adhoc
     */
     @Override
     public int connectAP(String ssid, String ipAddress, String subnetMask) {
@@ -167,7 +168,8 @@ public class LinuxNetwork extends OSNetwork{
         String result = execCmd(command)[0];
         return result;
     }
-
+    
+    // ref: https://help.ubuntu.com/community/WifiDocs/Adhoc
     @Override
     public int setupAP(String ssid, String mode, String ipAddress, String subnetMask) {
         String[] commands = {
@@ -177,6 +179,8 @@ public class LinuxNetwork extends OSNetwork{
 			 "iwconfig "+networkInfName+" mode "+mode,
                         // 3. setup ESSID (Boradcast Name)
 			 "iwconfig "+networkInfName+" essid " + ssid,
+                        // 4. setup WiFi channel
+                         "iwconfig "+networkInfName+" channel 4"
 		 };
         int exitCode = execCmds(commands);
         if(exitCode == 0){
