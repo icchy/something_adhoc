@@ -81,12 +81,14 @@ public class SomethingAdhoc {
                     }
                     // String relayName = client.adhocAvailable.get(0).ssid;
                     // 1. select destination node, at this rate.. just essid
-                    String targetNode = JOptionPane.showInputDialog(null, "Enter Target Node:");
+                    System.out.print("Enter Target Node:");
+                    String targetNode = in.nextLine();
                     System.out.println("Target is : "+targetNode);
                     // 2. get/discover routing
                     String route = SomethingRoute.getRoute(targetNode);
                     // 2.1 get Message to send
-                    String message = JOptionPane.showInputDialog(null, "Enter Message:");
+                    System.out.print("Enter Message:");
+                    String message = in.nextLine();
                     // 2.2 convert target Node into ESSID ?
                     // 2.3 get relay for next hop
                     //String relayName = SomethingRoute.getNextRelay(route);
@@ -115,6 +117,7 @@ public class SomethingAdhoc {
             }
             
         } 
+        // TODO: cleanup (fallback to manage mode) before exit
         System.exit(0);
         
     }
