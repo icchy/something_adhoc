@@ -111,7 +111,11 @@ public class SomethingAdhoc {
             }
             
         } 
-        // TODO: cleanup (fallback to manage mode) before exit
+        // TODO: cleanup (fallback to manage mode) before exit for client mode
+        if(ap instanceof AdhocAP){
+            // 1. down AP (remove essid + set to managed mode)
+            ap.downAP();
+        }
         System.exit(0);
         
     }
