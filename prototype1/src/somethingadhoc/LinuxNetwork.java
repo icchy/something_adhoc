@@ -82,7 +82,10 @@ public class LinuxNetwork extends OSNetwork{
         return false;
     }
     
-    
+    /*
+    Buggy: This function sometimes connect to existing Ad-Hoc
+            But sometimes establish Ad-Hoc with the same name by itself :|?
+    */
     @Override
     public int connectAP(String ssid, String ipAddress, String subnetMask) {
         /*
