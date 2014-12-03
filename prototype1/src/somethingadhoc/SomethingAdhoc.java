@@ -128,7 +128,7 @@ public class SomethingAdhoc {
             case "1":
                 /*
                     @TODO
-                    in this mode, 
+                    this is how ad-hoc ap handle packet from connected client
                 
                     1. system have to periodic maintain neighbor list
                     for reconstruct routing if needed (reactive)
@@ -184,6 +184,8 @@ public class SomethingAdhoc {
                     sample of routing info. format (RTP)
                 
                     ['started-time-of-discovery','ended-time-of-discovery',['nodeA-macAddr','nodeB-macAddr','nodeC-macAddr']]
+                    * time = timestamp
+                    * node name is just alias, unique identifier is mac address (even if it's spoofable we don't have another choice?)
                     
                 */
                 client = null;
