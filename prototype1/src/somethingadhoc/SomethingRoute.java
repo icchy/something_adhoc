@@ -4,13 +4,14 @@ package somethingadhoc;
 public class SomethingRoute {
     
     private static SomethingRoute route;
-    String filename = "";
+    public static String filename;
     
     private SomethingRoute(){}
     
     // singleton
     public SomethingRoute init(){
         if(route == null){
+            SomethingRoute.filename = "/tmp/something_route_"+(((int)(Math.random()*1024)));
             route = new SomethingRoute();
         }
         return route;

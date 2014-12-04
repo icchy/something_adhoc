@@ -79,7 +79,7 @@ public class SomethingAdhoc {
                     String targetNode = in.nextLine();
                     System.out.println("Target is : "+targetNode);
                     // 2. get/discover routing
-                    String route = SomethingRoute.getRoute(targetNode);
+                    String route = SomethingRoute.getRoute(targetNode); // RRP + local neihjbor links
                     // 2.1 get Message to send
                     System.out.print("Enter Message:");
                     String message = in.nextLine();
