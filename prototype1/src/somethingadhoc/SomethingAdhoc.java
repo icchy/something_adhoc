@@ -117,7 +117,7 @@ public class SomethingAdhoc {
                 /*
                     @TODO
                     this is how ad-hoc ap handle packet from connected client
-                    it should be fullfill inside ServerSocketThread.java maybe ?
+                    it should be fullfill inside ServerProcess.java maybe ?
                 
                     1. system have to periodic maintain neighbor list
                     for reconstruct routing if needed (reactive)

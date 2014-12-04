@@ -1,7 +1,8 @@
 package somethingadhoc;
 
 public class AdhocAP extends Adhoc{
-    String apName;
+    public static String apName;
+    public static int uID;
     String clientName;
     String macAddress;
     
@@ -10,10 +11,17 @@ public class AdhocAP extends Adhoc{
         macAddress = getMacAddress();
     }
     
+    /**
+     * uId is incremental b/c if SSID was cached in the air
+     * client will select the highest number of SSID as latest AP
+     * @return status of setupAdhoc()
+     */
     public int setupAdhoc(){
-        // @TODO: senshin_ + mac address + random name?
-        apName = "senshin_"+macAddress+"_"+(((int)(Math.random()*1000))+1);
-        apName = apName.replaceAll("-", "");
+        // @TODO: senshin_ + mac address + random no or incremental no?
+        // int uID = (((int)(Math.random()*1000))+1);
+        uID++;
+        apName = "senshin_"+macAddress+"_"+uID;
+        apName = apName.replaceAll("-", ""); // remove '-' from MAC addr
         System.out.println("Starting AdHoc: "+apName);
         return super.setupAdhoc(apName);
     }

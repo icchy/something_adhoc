@@ -25,6 +25,17 @@ public class ServerSocketThread extends Thread{
         this.apIPAddress = apIPAddress;
         this.serverPort = serverPort;
     }
+    /*
+        Packets should be in form ofc tree structure?
+        
+        https://stackoverflow.com/questions/8480284/storing-a-tree-structure-in-java
+        Use Java's serialization mechanism for persisting your tree, 
+        is the simplest solution, and use ObjectInputStream for reading / 
+        ObjectOutputStream for writing the serialized data from/to disk.
+        
+        Example of storing tree like structure in Java
+        http://www.sourcecodesworld.com/articles/java/java-data-structures/Reading_and_Writing_Trees.asp
+    */
     @Override
     public void run() {
         
