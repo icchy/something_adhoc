@@ -1,5 +1,11 @@
 package somethingadhoc;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class SomethingRoute {
     
@@ -18,15 +24,27 @@ public class SomethingRoute {
     }
     
     public static String getAllRoute(){
-        return null;
+        StringBuilder sb = new StringBuilder("");
+        try {
+            // read route file and get all lines
+            Scanner in = new Scanner(new File(SomethingRoute.filename));
+            // @TODO: check format of lines in file?
+            while(in.hasNextLine()){
+                sb.append(in.nextLine());
+            }
+        } catch (FileNotFoundException ex) {
+            System.err.println("Error: File not found");
+        }
+        return sb.toString();
     }
     
     public static String getRoute(String nodeName){
+        // read route file and find a line contains nodeNames
         return null;
     }
     
     public static void updateNeighbors(){
-        
+        // just use the get ad-hoc list from AdhocClient ?
     }
     
     public static boolean checkRoute(String routeRecord){
