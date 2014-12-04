@@ -96,15 +96,19 @@ public class SomethingAdhoc {
                     Node: If next hop is not destination yet, 
                         then forward routing table to neighbors (except the forwarder/sender)
                     */
-                    // 1. destination is within the neighbor, send it directly
+                    
                     if(relayName.equals(targetNode)){
-                        // send only data
+                        // 1. destination is within the neighbor, send it directly
                         t2 = new ModeSenderThread(message);
-                    // 2. send data+RTP to known route (in cached route file)
-                    // }else if(){
-                    // 3. send routing request packet neighbors to construct routing
-                    }else{
+                    
+                    }else if(routeRecord!=null){
+                        // 2. send data+RTP to known route (in cached route file)
                         t2 = new ModeSenderThread(message, routeRecord);
+                    
+                    }else{
+                        // 3. send routing request packet neighbors to construct routing
+                        t2 = new ModeSenderThread(routeRecord);
+                        
                     }
                     t2.start();
                     // 5. client should receive ack. that confirm message reach server socket
