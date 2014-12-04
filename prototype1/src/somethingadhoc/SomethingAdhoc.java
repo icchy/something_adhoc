@@ -63,7 +63,7 @@ public class SomethingAdhoc {
                     }
                     // String relayName = client.adhocAvailable.get(0).ssid;
                     // 1. select destination node, at this rate.. just essid
-                    System.out.print("Enter Target Node:");
+                    System.out.print("Enter Target Node: ");
                     String targetNode = in.nextLine();
                     
                     // @TODO:   the number at the end of node should not be entered
@@ -78,7 +78,7 @@ public class SomethingAdhoc {
                     // 2.1 get Message to send
                     // @TODO:   this should provide dependency injection 
                     //          to support nother types of data eg. file/streaming
-                    System.out.print("Enter Message:");
+                    System.out.print("Enter Message: ");
                     String message = in.nextLine();
                     
                     // 2.2 convert target Node into ESSID ?
@@ -100,11 +100,11 @@ public class SomethingAdhoc {
                     if(relayName.equals(targetNode)){
                         // 1. destination is within the neighbor, send it directly
                         t2 = new ModeSenderThread(message);
-                    
+                        
                     }else if(routeRecord!=null){
                         // 2. send data+RTP to known route (in cached route file)
                         t2 = new ModeSenderThread(message, routeRecord);
-                    
+                        
                     }else{
                         // 3. send routing request packet neighbors to construct routing
                         t2 = new ModeSenderThread(routeRecord);
