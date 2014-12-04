@@ -109,12 +109,13 @@ public abstract class Adhoc {
     public String getMacAddress(){
         final StringBuilder sb = new StringBuilder();
         try {
-            String netInfName = "";
+            String netInfName = "lo";
             NetworkInterface netInf = null;
             Enumeration<NetworkInterface> intfs = NetworkInterface.getNetworkInterfaces();
-            while(!netInfName.equals(net.networkInfName) && intfs.hasMoreElements()){
-                 
+            //while(!netInfName.equals(net.networkInfName) && intfs.hasMoreElements()){
+            while(netInfName.equals("lo") && intfs.hasMoreElements()){
                  netInf = intfs.nextElement();
+                 netInfName = netInf.getName();
             }
             if(netInf == null){
                 System.err.println("Error: Network Interface is not found");
