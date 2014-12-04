@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LinuxNetwork extends OSNetwork{
-    String networkInfName; // wlan0
+    
     String expectedOS; 
     String[] requiredPrograms;
     

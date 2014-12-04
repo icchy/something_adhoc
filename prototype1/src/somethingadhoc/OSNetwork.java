@@ -6,7 +6,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public abstract class OSNetwork {
-
+    
+    String networkInfName; // wlan0
     // 1. this is linux?
     // 2. have required programs (ifconfig, iw, iwconfig)
     // 3. have wifi interface

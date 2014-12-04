@@ -108,8 +108,20 @@ public abstract class Adhoc {
     public String getMacAddress(){
         final StringBuilder sb = new StringBuilder();
         try {
-            final NetworkInterface netInf = NetworkInterface.getNetworkInterfaces().nextElement();
+            String netInfName = "";
+            NetworkInterface netInf = null;
+            while(!netInfName.equals(net.networkInfName)){
+                 netInf = NetworkInterface.getNetworkInterfaces().nextElement();
+            }
+            if(netInf == null){
+                System.err.println("Error: Network Interface is not found");
+                System.exit(1);
+            }
             final byte[] mac = netInf.getHardwareAddress();
+            if(mac == null){
+                System.err.println("Error: This Network Interface cannot get MAC Address");
+                System.exit(1);
+            }
             for (int i = 0; i < mac.length; i++) {        
                 sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
             }
