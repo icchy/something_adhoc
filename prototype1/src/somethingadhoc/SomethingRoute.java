@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class SomethingRoute {
@@ -40,6 +42,15 @@ public class SomethingRoute {
     
     public static String getRoute(String nodeName){
         // read route file and find a line contains nodeNames
+        String allRoutes = SomethingRoute.getAllRoute();
+        String pattern = ".*"+nodeName+".*";
+        Pattern p = Pattern.compile(pattern, Pattern.MULTILINE);
+	Matcher m = p.matcher(allRoutes);
+        
+        while (m.find()) {
+                return m.group(0); // first match is okay?
+	}
+        System.err.println("Error: route cannot be found, so reconstruct it");
         return null;
     }
     
