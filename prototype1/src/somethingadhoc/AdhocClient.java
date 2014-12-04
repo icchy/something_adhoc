@@ -18,7 +18,6 @@ public class AdhocClient extends Adhoc{
         lastScan = new Date();
     }
     
-    
     // print to console
     public void showAdhocList(){
         int totalAdhoc = adhocAvailable.size();

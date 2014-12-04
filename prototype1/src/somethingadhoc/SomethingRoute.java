@@ -130,6 +130,7 @@ public class SomethingRoute {
     }
     
     /**
+     * @TODO: update this format with tree according to Ryo
      * routeRecord looks like ['started-time-of-discovery','ended-time-of-discovery',
      *                      'nodeA-macAddr','nodeB-macAddr','nodeC-macAddr']
      * 
@@ -149,18 +150,21 @@ public class SomethingRoute {
         // 2. loop through each relays to get next hop
         String thisNodeName = "??";
         for (int i = 0; i < nextRelays.size(); i++) {
+            // 3. if found this node in routing path
             if(nextRelays.get(i).equals(thisNodeName)){
                 if(rightHop){
                     if(i==0){
                         System.err.println("Error! there is no next hop to this node!");
                         return null; 
                     }
+                    // 3.1 get next hop on the right
                     return nextRelays.get(i-1);
                 }else{
                     if(i==nextRelays.size()-1){
                         System.err.println("Error! there is no next hop to this node!");
                         return null;
                     }
+                    // 3.2 get next hop on the left
                     return nextRelays.get(i+1);
                 }
             }
