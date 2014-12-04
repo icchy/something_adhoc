@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -107,11 +109,57 @@ public class SomethingRoute {
         return null;
     }
     
+    /**
+     * to check a specific route record is in the route file or not
+     * @param routeRecord
+     * @return boolean indicate status of routeRecord (exist/not exist)
+     */
     public static boolean checkRoute(String routeRecord){
+        if(getRoute(routeRecord) != null){
+            return true;
+        }
         return false;
     }
-    public static String getNextRelay(String route){
+    
+    /**
+     * routeRecord looks like ['started-time-of-discovery','ended-time-of-discovery',
+     *                      'nodeA-macAddr','nodeB-macAddr','nodeC-macAddr']
+     * 
+     * toDest is a boolean value indicate that 
+     * - (true) get next hop in the right side
+     * - (false) get next hop in the left side
+     * 
+     * @param routeRecord, rightHop
+     * @return relayname of next hop
+     */
+    public static String getNextRelay(String routeRecord, boolean rightHop){
+        // @TODO: should we use serialized object in Java insteads of string - -?
+        ArrayList<String> nextRelays = new ArrayList(Arrays.asList(routeRecord.split("','")));
+        // 1. discard first and second member in array which are start/end time
+        nextRelays.remove(0);
+        nextRelays.remove(0);
+        // 2. loop through each relays to get next hop
+        String thisNodeName = "??";
+        for (int i = 0; i < nextRelays.size(); i++) {
+            if(nextRelays.get(i).equals(thisNodeName)){
+                if(rightHop){
+                    if(i==0){
+                        System.err.println("Error! there is no next hop to this node!");
+                        return null; 
+                    }
+                    return nextRelays.get(i-1);
+                }else{
+                    if(i==nextRelays.size()-1){
+                        System.err.println("Error! there is no next hop to this node!");
+                        return null;
+                    }
+                    return nextRelays.get(i+1);
+                }
+            }
+        }
+        System.err.println("Error! this node is not in the route record");
         return null;
     }
+    
     
 }
