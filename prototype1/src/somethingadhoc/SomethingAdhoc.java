@@ -67,7 +67,8 @@ public class SomethingAdhoc {
                     String targetNode = in.nextLine();
                     System.out.println("Target is : "+targetNode);
                     // 2. get/discover routing
-                    String route = SomethingRoute.getRoute(targetNode); // RRP + local neihjbor links
+                    SomethingRoute route = SomethingRoute.init();
+                    String routeRecord = route.getRoute(targetNode); // RRP + local neihjbor links
                     // 2.1 get Message to send
                     System.out.print("Enter Message:");
                     String message = in.nextLine();
@@ -90,7 +91,7 @@ public class SomethingAdhoc {
                     
                     }else{
                         // send data + routing
-                        t2 = new ModeSenderThread(message, route);
+                        t2 = new ModeSenderThread(message, routeRecord);
                     }
                     t2.start();
                     // 5. client should receive ack. that confirm message reach server socket

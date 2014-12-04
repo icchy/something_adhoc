@@ -19,13 +19,21 @@ public class SomethingRoute {
     private static SomethingRoute route;
     public static String filename;
     
-    private SomethingRoute(){}
+    public SomethingRoute(){}
     
     // singleton
-    public SomethingRoute init(){
+    public static SomethingRoute init(){
         if(route == null){
-            SomethingRoute.filename = "/tmp/something_route_"+(((int)(Math.random()*1024)));
-            route = new SomethingRoute();
+            try {
+                String path = "/tmp/something_route_"+(((int)(Math.random()*1024)));
+                File f = new File(path);
+                // f.mkdirs();
+                f.createNewFile();
+                SomethingRoute.filename = path;
+                route = new SomethingRoute();
+            } catch (IOException ex) {
+                System.err.println("Error: Cannot Create File");
+            }
         }
         return route;
     }
