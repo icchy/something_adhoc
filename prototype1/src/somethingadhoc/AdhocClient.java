@@ -18,14 +18,35 @@ public class AdhocClient extends Adhoc{
         lastScan = new Date();
     }
     
+    
     // print to console
     public void showAdhocList(){
         int totalAdhoc = adhocAvailable.size();
         System.out.println("Found ad-hoc: "+totalAdhoc);
         for (int i = 1; i <= totalAdhoc; i++) {
             String adhocName = adhocAvailable.get(i-1).ssid;
-            System.out.println("\n"+i+": "+adhocName);
+            if(adhocName.contains("senshin")){
+                System.out.println("\n"+i+": "+adhocName);
+            }
         }
+    }
+    
+    // get neighbor for SomethingRoute
+    public String getNeighbors(){
+        StringBuilder sb = new StringBuilder("");
+        int totalAdhoc = adhocAvailable.size();
+        if(totalAdhoc < 1){
+            return null;
+        }
+        System.out.println("Found ad-hoc: "+totalAdhoc);
+        for (int i = 1; i <= totalAdhoc; i++) {
+            String adhocName = adhocAvailable.get(i-1).ssid;
+            // @TODO: check format of this record?
+            if(adhocName.contains("senshin")){
+                sb.append("\n"+i+": "+adhocName);
+            }
+        }
+        return sb.toString();
     }
     
     /*

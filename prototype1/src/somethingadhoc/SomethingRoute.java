@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import static somethingadhoc.SomethingAdhoc.client;
 
 
 public class SomethingRoute {
@@ -94,8 +95,16 @@ public class SomethingRoute {
         }
     }
     
-    public static void updateNeighbors(){
+    /*
+        scan nearby AdHoc
+    */
+    public static String getUpdatedNeighbors(){
         // just use the get ad-hoc list from AdhocClient ?
+        if(SomethingAdhoc.client instanceof AdhocClient && SomethingAdhoc.client != null){
+            SomethingAdhoc.client.refreshAdhocList();
+            return SomethingAdhoc.client.getNeighbors();
+        }
+        return null;
     }
     
     public static boolean checkRoute(String routeRecord){
