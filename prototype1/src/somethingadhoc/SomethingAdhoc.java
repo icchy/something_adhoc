@@ -42,19 +42,7 @@ public class SomethingAdhoc {
                     mode = in.nextLine();
                     break;
                 case "turnoff":
-                    if(ap instanceof AdhocAP){
-                        // 1. down AP (remove essid + set to managed mode)
-                        ap.downAP();
-                        ap = null;
-                        apOn = false;
-                        System.out.println("Shutdown AP...");
-                        Thread.sleep(5000);
-                    }
-                    if(t1 instanceof ServerSocketThread){
-                        // 2. down socket server thread
-                        System.out.println("Closing the Server Socket..");
-                        t1.stopServerSocket();
-                    }
+                    SomethingAdhoc.turnoffAP();
                     mode = "";
                     break;
                 case "scan":
@@ -112,11 +100,11 @@ public class SomethingAdhoc {
             }
             
         } 
-        // TODO: cleanup (fallback to manage mode) before exit for client mode
-        if(ap instanceof AdhocAP){
-            // 1. down AP (remove essid + set to managed mode)
-            ap.downAP();
-        }
+        
+        // 1. down AP (remove essid + set to managed mode)        
+        SomethingAdhoc.turnoffAP();
+        // @TODO 2. down Client (fallback to manage mode) before exit for client mode
+        
         System.exit(0);
         
     }
@@ -245,5 +233,20 @@ public class SomethingAdhoc {
         Thread.sleep(1000);
         // 3. show adhoc list in console
         client.showAdhocList();
+    }
+    public static void turnoffAP() throws InterruptedException, IOException{
+        if(ap instanceof AdhocAP){
+                        // 1. down AP (remove essid + set to managed mode)
+                        ap.downAP();
+                        ap = null;
+                        apOn = false;
+                        System.out.println("Shutdown AP...");
+                        Thread.sleep(5000);
+                    }
+        if(t1 instanceof ServerSocketThread){
+            // 2. down socket server thread
+            System.out.println("Closing the Server Socket..");
+            t1.stopServerSocket();
+        }
     }
 }
