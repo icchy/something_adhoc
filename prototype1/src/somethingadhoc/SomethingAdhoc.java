@@ -65,16 +65,27 @@ public class SomethingAdhoc {
                     // 1. select destination node, at this rate.. just essid
                     System.out.print("Enter Target Node:");
                     String targetNode = in.nextLine();
+                    
+                    // @TODO:   the number at the end of node should not be entered
+                    //          because it is incrementally number to prevent cache SSID
+                    //          but we have to make connectAP understand it too
                     System.out.println("Target is : "+targetNode);
-                    // 2. get/discover routing
                     SomethingRoute route = SomethingRoute.init();
+                    
+                    // 2. update neighbor into routing table & discover routing
                     String routeRecord = route.getRoute(targetNode); // RRP + local neihjbor links
+                    
                     // 2.1 get Message to send
+                    // @TODO:   this should provide dependency injection 
+                    //          to support nother types of data eg. file/streaming
                     System.out.print("Enter Message:");
                     String message = in.nextLine();
+                    
                     // 2.2 convert target Node into ESSID ?
                     // 2.3 get relay for next hop
-                    //String relayName = SomethingRoute.getNextRelay(route);
+                    
+                    //String relayName = route.getNextRelay(route);
+                    // @TODO: implement getting next hop!
                     String relayName = targetNode; // no next hop yet!!
                     System.out.println("Connecting to : "+relayName);
                     // 3. connect to relay
@@ -82,15 +93,17 @@ public class SomethingAdhoc {
                     System.out.println("Debug: connect status = "+status);
                     // 4. client socket connect to AP server socket
                     /*
-                    Node: If not reach destination, then forward data+routing table
-                        otherwise, forward only data
+                    Node: If next hop is not destination yet, 
+                        then forward routing table to neighbors (except the forwarder/sender)
                     */
+                    // 1. destination is within the neighbor, send it directly
                     if(relayName.equals(targetNode)){
                         // send only data
                         t2 = new ModeSenderThread(message);
-                    
+                    // 2. send data+RTP to known route (in cached route file)
+                    // }else if(){
+                    // 3. send routing request packet neighbors to construct routing
                     }else{
-                        // send data + routing
                         t2 = new ModeSenderThread(message, routeRecord);
                     }
                     t2.start();
