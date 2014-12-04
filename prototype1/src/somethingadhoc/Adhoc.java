@@ -5,6 +5,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -110,8 +111,10 @@ public abstract class Adhoc {
         try {
             String netInfName = "";
             NetworkInterface netInf = null;
-            while(!netInfName.equals(net.networkInfName)){
-                 netInf = NetworkInterface.getNetworkInterfaces().nextElement();
+            Enumeration<NetworkInterface> intfs = NetworkInterface.getNetworkInterfaces();
+            while(!netInfName.equals(net.networkInfName) && intfs.hasMoreElements()){
+                 
+                 netInf = intfs.nextElement();
             }
             if(netInf == null){
                 System.err.println("Error: Network Interface is not found");
