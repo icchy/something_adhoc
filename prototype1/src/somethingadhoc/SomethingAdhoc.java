@@ -88,7 +88,7 @@ public class SomethingAdhoc {
                     // @TODO: implement getting next hop!
                     String relayName = targetNode; // no next hop yet!!
                     System.out.println("Connecting to : "+relayName);
-                    // 3. connect to relay
+                    // 3. connect to relay <--------------------------- using extracted info from SomethingRoute
                     int status = client.connectRelay(relayName);
                     System.out.println("Debug: connect status = "+status);
                     // 4. client socket connect to AP server socket

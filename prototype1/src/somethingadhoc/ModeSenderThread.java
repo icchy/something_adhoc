@@ -23,7 +23,15 @@ public class ModeSenderThread extends Thread{
     
     
     String message;
-
+    
+    /*
+    
+    Constructor should support 3 mode as being passed by Main()
+    1. destination is within the neighbor, send it directly
+    2. send data+RTP to known route (in cached route file)
+    3. send routing request packet neighbors to construct routing
+    
+    */
     public ModeSenderThread(String message){
         this(message,"");
     }
@@ -55,6 +63,7 @@ public class ModeSenderThread extends Thread{
         as specified in the Routing specification
         
         2. We may need one more layer to manage this task and pass it back to here after processed
+        
         
         */
         if (clientSocket != null && os != null && is != null) {
