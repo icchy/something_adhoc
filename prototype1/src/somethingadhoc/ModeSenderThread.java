@@ -48,6 +48,15 @@ public class ModeSenderThread extends Thread{
         } catch (IOException e) {
                 System.err.println("Couldn't get I/O for the connection to the host "+ destinationIP);
         }
+        /*
+        
+        @TODO:
+        1. Insteads of sending raw string, it should pack strings with Packet Type info
+        as specified in the Routing specification
+        
+        2. We may need one more layer to manage this task and pass it back to here after processed
+        
+        */
         if (clientSocket != null && os != null && is != null) {
                 try {
 
