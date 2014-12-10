@@ -27,6 +27,13 @@ public class SomethingAdhoc {
         String command = "";
         String mode = "";
         
+        // open the program at the first time
+        // turn into AP mode
+        mode = "1";
+        SomethingAdhoc.modeAP();
+        apOn = true;
+        command = "";
+        
         while(!command.equals("exit")){
             printBanner(mode);
             command = in.nextLine();
@@ -42,79 +49,93 @@ public class SomethingAdhoc {
                     mode = in.nextLine();
                     break;
                 case "turnoff":
-                    SomethingAdhoc.turnoffAP();
-                    mode = "";
+                    if(mode.equals("1")){
+                        SomethingAdhoc.turnoffAP();
+                        mode = "";
+                    }else{
+                        System.err.println("Error: This command work only in AP mode");
+                    }
                     break;
                 case "scan":
-                    System.out.println("[+] Scan !");
-                    // 0. precondition
-                    if(client==null || !mode.equals("2")){
-                        System.err.println("Please switch to Sender Mode");
-                        break;
+                    if(mode.equals("2")){
+                        System.out.println("[+] Scan !");
+                        // 0. precondition
+                        if(client==null || !mode.equals("2")){
+                            System.err.println("Please switch to Sender Mode");
+                            break;
+                        }
+                        refreshAndPrintAdhocList();
+                    }else{
+                        System.err.println("Error: This command work only in Client mode");
                     }
-                    refreshAndPrintAdhocList();
                     break;
                 case "send":
-                    System.out.println("[+] Send !");
-                    // 0. precondition
-                    if(client==null || !mode.equals("2")){
-                        System.err.println("Please switch to Sender Mode");
-                        break;
-                    }
-                    // String relayName = client.adhocAvailable.get(0).ssid;
-                    // 1. select destination node, at this rate.. just essid
-                    System.out.print("Enter Target Node: ");
-                    String targetNode = in.nextLine();
-                    
-                    // @TODO:   the number at the end of node should not be entered
-                    //          because it is incrementally number to prevent cache SSID
-                    //          but we have to make connectAP understand it too
-                    System.out.println("Target is : "+targetNode);
-                    SomethingRoute route = SomethingRoute.init();
-                    
-                    // 2. update neighbor into routing table & discover routing
-                    String routeRecord = route.getRoute(targetNode); // RRP + local neihjbor links
-                    
-                    // 2.1 get Message to send
-                    // @TODO:   this should provide dependency injection 
-                    //          to support nother types of data eg. file/streaming
-                    System.out.print("Enter Message: ");
-                    String message = in.nextLine();
-                    
-                    // 2.2 convert target Node into ESSID ?
-                    // 2.3 get relay for next hop
-                    
-                    //String relayName = route.getNextRelay(route);
-                    // @TODO: implement getting next hop!
-                    String relayName = targetNode; // no next hop yet!!
-                    System.out.println("Connecting to : "+relayName);
-                    // 3. connect to relay <--------------------------- using extracted info from SomethingRoute
-                    int status = client.connectRelay(relayName);
-                    System.out.println("Debug: connect status = "+status);
-                    // 4. client socket connect to AP server socket
-                    /*
-                    Node: If next hop is not destination yet, 
-                        then forward routing table to neighbors (except the forwarder/sender)
-                    */
-                    
-                    if(relayName.equals(targetNode)){
-                        // 1. destination is within the neighbor, send it directly
-                        t2 = new ModeSenderThread(message);
-                        
-                    }else if(routeRecord!=null){
-                        // 2. send data+RTP to known route (in cached route file)
-                        t2 = new ModeSenderThread(message, routeRecord);
-                        
+                    if(mode.equals("2")){
+                         System.out.println("[+] Send !");
+                        // 0. precondition
+                        if(client==null || !mode.equals("2")){
+                            System.err.println("Please switch to Sender Mode");
+                            break;
+                        }
+                        // String relayName = client.adhocAvailable.get(0).ssid;
+                        // 1. select destination node, at this rate.. just essid
+                        System.out.print("Enter Target Node: ");
+                        String targetNode = in.nextLine();
+
+                        // @TODO:   the number at the end of node should not be entered
+                        //          because it is incrementally number to prevent cache SSID
+                        //          but we have to make connectAP understand it too
+                        System.out.println("Target is : "+targetNode);
+                        SomethingRoute route = SomethingRoute.init();
+
+                        // 2. update neighbor into routing table & discover routing
+                        String routeRecord = route.getRoute(targetNode); // RRP + local neihjbor links
+
+                        // 2.1 get Message to send
+                        // @TODO:   this should provide dependency injection 
+                        //          to support nother types of data eg. file/streaming
+                        System.out.print("Enter Message: ");
+                        String message = in.nextLine();
+
+                        // 2.2 convert target Node into ESSID ?
+                        // 2.3 get relay for next hop
+
+                        //String relayName = route.getNextRelay(route);
+                        // @TODO: implement getting next hop!
+                        String relayName = targetNode; // no next hop yet!!
+                        System.out.println("Connecting to : "+relayName);
+                        // 3. connect to relay <--------------------------- using extracted info from SomethingRoute
+                        int status = client.connectRelay(relayName);
+                        System.out.println("Debug: connect status = "+status);
+                        // 4. client socket connect to AP server socket
+                        /*
+                        Node: If next hop is not destination yet, 
+                            then forward routing table to neighbors (except the forwarder/sender)
+                        */
+
+                        if(relayName.equals(targetNode)){
+                            // 1. destination is within the neighbor, send it directly
+                            t2 = new ModeSenderThread(message);
+
+                        }else if(routeRecord!=null){
+                            // 2. send data+RTP to known route (in cached route file)
+                            t2 = new ModeSenderThread(message, routeRecord);
+
+                        }else{
+                            // 3. send routing request packet neighbors to construct routing
+                            t2 = new ModeSenderThread(routeRecord);
+
+                        }
+                        t2.start();
+                        // 5. client should receive ack. that confirm message reach server socket
+                        // 6. fall back to AP mode
+                        // 7. force close client socket?
                     }else{
-                        // 3. send routing request packet neighbors to construct routing
-                        t2 = new ModeSenderThread(routeRecord);
-                        
+                        System.err.println("Error: This command work only in CLient mode");
                     }
-                    t2.start();
-                    // 5. client should receive ack. that confirm message reach server socket
-                    // 6. fall back to AP mode
-                    // 7. force close client socket?
                     break;
+                default:
+                    System.err.println("Error: Invalid command line, it does not exists");
             }
             
         } 
@@ -197,7 +218,7 @@ public class SomethingAdhoc {
                 */
                 client = null;
                 System.out.println("-- Mode: AP Mode              --");
-                System.out.println("Commands: mode, turnoff, exit");
+                System.out.println("Commands: turnoff, exit");
                 if(!apOn){
                     SomethingAdhoc.modeAP();
                     apOn = true;
