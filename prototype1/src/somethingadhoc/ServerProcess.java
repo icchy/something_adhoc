@@ -107,12 +107,16 @@ public class ServerProcess extends Thread{
                                                 
                                                 // issue: how we can get neighbor list while still in ad-hoc mode?
                                                 
+                                                // if( destName in neighbor_list)
+                                                // then
+                                                //      mark the route data that it is in the next
+                                                // else
+                                                //     forward to neighbors
+                                                
                                                 // parse json string in routeRaw
                                                 JSONParser parser = new JSONParser();
                                                 
                                                 JSONObject routeJson = (JSONObject)JSONValue.parse(payload);
-                                                
-                                                
                                                 
                                                 // top-level key
                                                 String key = String.valueOf(routeJson.keySet().toArray()[0]);
