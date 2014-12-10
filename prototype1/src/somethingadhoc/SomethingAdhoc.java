@@ -218,7 +218,17 @@ public class SomethingAdhoc {
                 */
                 client = null;
                 System.out.println("-- Mode: AP Mode              --");
-                System.out.println("Commands: turnoff, exit");
+                System.out.println("-- Status: idle              --");
+                /*
+                Status: 
+                    1. idle = just broadcast ad-hoc
+                    2. connected w/ request route = a client is connected to find route
+                    3. connected w/ reply route = a client is connected to send route back to next hop
+                    4. connected w/ send route = a client is connected to send route to this hop as last hop, prepare to send data
+                    5. connected w/ send data = a client is connected to send data to this node
+                    6. connected w/ forward data = a client is connected to this as relay (forward to next hop)
+                */
+                System.out.println("Commands: client, exit");
                 if(!apOn){
                     SomethingAdhoc.modeAP();
                     apOn = true;
