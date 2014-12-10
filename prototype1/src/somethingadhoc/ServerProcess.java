@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.json.simple.*;
+import org.json.simple.parser.*;
 
 public class ServerProcess extends Thread{
         // uses for terminate thread
@@ -46,15 +48,17 @@ public class ServerProcess extends Thread{
                                         //RelayProcess(buffer);
                                         System.out.println("Server receive : "+buffer);
                                         // output.println(rev); // send dummy to client
-                                        
+                                        String seperator = "|_|=-=|_|";
                                         // 10.1 make sure received data in the correct format
-                                        int count = buffer.length() - buffer.replace(".", "").length();
+                                        int count = buffer.length() - buffer.replace(seperator, "").length();
                                         if(count != 2){
                                             System.err.println("Malformed packet! => "+buffer);
                                             return;
                                         }
+                                        // ex. 1|_|=-=|_|{"senshin_A":}|senshin_C
                                         // 10.2 seperate field in data payload
-                                        String[] fields = buffer.split(",");
+                                        
+                                        String[] fields = buffer.split(seperator);
                                         // 11. indicate what kind of packet
                                         String type = fields[0];
                                         String payload = fields[1];
@@ -62,6 +66,31 @@ public class ServerProcess extends Thread{
                                         switch(type){
                                             case "1":
                                                 // 11.1 route request
+                                                /*
+                                                2.1 type 1: Route Request Packet (RRP)
+                                                it will came from a source or an intermediate node
+                                                that about to reconstruct route from src. to dst.
+                                                2.1.1 if this node is dst. then send back route table (RTP).
+                                                back to source node (original sender)
+                                                2.1.2 Count number of hops (TTL style?) 
+                                                to prevent loop/unreachable node
+                                                maximum should be around ~12 hops? 
+                                                2.1.3 otherwise, pass RRP to neighbors
+                                                @TODO if there are many different paths to reach dest. node
+                                                    | should a node send only the shortest path or send all info back
+                                                    | becuase some paths may failed and others probably can replace it
+                                                
+                                                current route pattern: 
+                                                1. A find C but not in neighbor, then send 
+                                                {"senshin_A":}|senshin_C
+                                                to ask neighbor (B)
+                                                2. B has C in neighbor then add to original route 
+                                                {"senshin_A":{"senshin_B":"sehshin_C"}}}|senshin_C
+                                                then B send back to A
+                                                
+                                                json ref: http://www.tutorialspoint.com/json/json_java_example.htm
+                                                */
+                                                
                                                 break;
                                             case "2":
                                                 // 11.2 route reply
