@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
@@ -82,14 +84,42 @@ public class ServerProcess extends Thread{
                                                 
                                                 current route pattern: 
                                                 1. A find C but not in neighbor, then send 
-                                                {"senshin_A":}|senshin_C
+                                                {"senshin_A":["d":"senshin_C",]}
                                                 to ask neighbor (B)
                                                 2. B has C in neighbor then add to original route 
-                                                {"senshin_A":{"senshin_B":"sehshin_C"}}}|senshin_C
+                                                {"senshin_A":{"senshin_B":"sehshin_C"}}|senshin_C
                                                 then B send back to A
                                                 
                                                 json ref: http://www.tutorialspoint.com/json/json_java_example.htm
                                                 */
+                                                
+                                                // 12. extract data
+                                                
+                                                // ex. payload => {"senshin_A":{"senshin_B":"sehshin_C"}}|senshin_C
+                                                
+                                                // ex. routeRaw => {"senshin_A":{"senshin_B":"sehshin_C"}}
+                                                String routeRaw = payload.split("|")[0];
+                                                
+                                                // ex. destName => senshin_C
+                                                String destName = payload.split("|")[1];
+                                                
+                                                // 13. check destName against neighbor list
+                                                
+                                                // issue: how we can get neighbor list while still in ad-hoc mode?
+                                                
+                                                // parse json string in routeRaw
+                                                JSONParser parser = new JSONParser();
+                                                
+                                                JSONObject routeJson = (JSONObject)JSONValue.parse(payload);
+                                                
+                                                
+                                                
+                                                // top-level key
+                                                String key = String.valueOf(routeJson.keySet().toArray()[0]);
+                                                // value of top-level key
+                                                String value = String.valueOf(routeJson.get(key));
+                                                
+                                                
                                                 
                                                 break;
                                             case "2":
@@ -115,7 +145,7 @@ public class ServerProcess extends Thread{
                         
 			
 		} catch (IOException e) {
-			System.out.println("Error: "+e.getMessage());
+			System.err.println("Error: "+e.getMessage());
 			e.printStackTrace();
 		} finally{
 			closeClient();
