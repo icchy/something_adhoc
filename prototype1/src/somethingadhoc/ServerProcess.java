@@ -37,22 +37,52 @@ public class ServerProcess extends Thread{
                             1. client send '__exit__' command
                             2. ServerSocketThread terminate this process by terminateServer()
                         */
-			while(running.get()){
+			//while(running.get()){
 				// 8. grab data from client
 				buffer = input.readLine(); 
                                 
 				if( buffer != null ){
 					// 9. TODO: logic of relay stuffs will occur here!
                                         //RelayProcess(buffer);
-                                        String rev = "good, Server get : "+buffer;
-					output.println(rev);
-                                        System.out.println(rev);
+                                        System.out.println("Server receive : "+buffer);
+                                        // output.println(rev); // send dummy to client
+                                        
+                                        // 10.1 make sure received data in the correct format
+                                        int count = buffer.length() - buffer.replace(".", "").length();
+                                        if(count != 2){
+                                            System.err.println("Malformed packet! => "+buffer);
+                                            return;
+                                        }
+                                        // 10.2 seperate field in data payload
+                                        String[] fields = buffer.split(",");
+                                        // 11. indicate what kind of packet
+                                        String type = fields[0];
+                                        String payload = fields[1];
+                                        
+                                        switch(type){
+                                            case "1":
+                                                // 11.1 route request
+                                                break;
+                                            case "2":
+                                                // 11.2 route reply
+                                                break;
+                                            case "3":
+                                                // 11.3 data forward
+                                                break;
+                                            case "4":
+                                                // 11.4 data
+                                                break;
+                                            default:
+                                                // malform type
+                                        }
+
+                                        /*
                                         if(buffer.contains("__exit__")){
                                             break;
-                                        }
+                                        }*/
 				}
                                 
-			}
+			//}
                         
 			
 		} catch (IOException e) {
