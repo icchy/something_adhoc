@@ -1,0 +1,63 @@
+                /*
+                    @TODO
+                    this is how ad-hoc ap handle packet from connected client
+                    it should be fullfill inside ServerProcess.java maybe ?
+                
+                    1. system have to periodic maintain neighbor list
+                    for reconstruct routing if needed (reactive)
+                
+                    2. system have to check types of connected client which are..
+                
+                    2.1 type 1: Route Request Packet (RRP)
+                                it will came from a source or an intermediate node
+                                that about to reconstruct route from src. to dst.
+                                2.1.1 if this node is dst. then send back route table (RTP).
+                                back to source node (original sender)
+                                2.1.2 Count number of hops (TTL style?) 
+                                to prevent loop/unreachable node
+                                maximum should be around ~12 hops? 
+                                2.1.3 otherwise, pass RRP to neighbors
+                                @TODO if there are many different paths to reach dest. node
+                                    | should a node send only the shortest path or send all info back
+                                    | becuase some paths may failed and others probably can replace it
+
+                    2.2 type 2: Routing Table Packet (RTP)
+                                it will came from a dest. or an intermediate node
+                                that realized path from source to dest. node
+                                2.2.1 make sure that this node is in the route info
+                                2.2.2 if this node is src. then record route info.
+                                    and prepare to send data packet
+                                2.2.3 otherwise, send back to src/intermediate in next hop
+                                2.2.3.1 if next hop specified in RTP does not exist, send back 'type 4'? or just discard it
+                                @TODO is it possible to let all intermediate nodes
+                                    | learn path between two node from RTP because
+                                    | later on, if someone else send RRP to find a node 
+                                    | in that path, this intermediate node will be able to
+                                    | send route info. directly to reduce the cost of discovery (time)
+                                    | however, what about if there is a failed node within path? how do we know?
+                                    | another possible way is to learn the time that RTP is arrived too
+                                    | ex. if someone request a node that this node learnt from other's RTP
+                                    |     within 30 minutes, then reuse the path, otherwise reconstruct it
+                                    | anyway, we should not rely upon this learned info b/c it is designed to be reactive routing
+                                
+                
+                    2.3 type 3: Data Packet + RTP
+                                it will came from a source or an intermediate node
+                                2.3.1 if this node is final node in route info, catch it
+                                2.3.2 otherwise, forward Data Packet + RTP to next hop
+                                2.3.3 if next hop is not exist in neighbor list, send back 'type 4' to src.
+                                @TODO what if link that report link fail is down LoL? maybe set a timeout
+                
+                    2.4 type 4: Report Link Fail Packet (RLFP)
+                                it will came from an intermediate node
+                                that cannot find next hop, so learn failed node
+                                and delete routing table info which contains it
+                    
+                    
+                    sample of routing info. format (RTP)
+                
+                    ['started-time-of-discovery','ended-time-of-discovery',['nodeA-macAddr','nodeB-macAddr','nodeC-macAddr']]
+                    * time = timestamp
+                    * node name is just alias, unique identifier is mac address (even if it's spoofable we don't have another choice?)
+                    
+                */
