@@ -6,6 +6,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class SomethingAdhoc {
@@ -16,6 +18,7 @@ public class SomethingAdhoc {
     public static AdhocAP ap;
     public static String wifiInf;
     public static boolean apOn;
+    
     
     public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
         
@@ -30,42 +33,34 @@ public class SomethingAdhoc {
         String mode = "1";
         
         while(!command.equals("exit")){
-            printBanner(mode);
+            printBanner(mode); // switch AP/Client occur inside printBanner
             command = in.nextLine();
             
             switch(command){
-                /*
-                case "mode":
-                    System.out.println("-----------------------------------");
-                    System.out.println("-- Type: 1       for  AP Mode     -");
-                    System.out.println("-- Type: 2       for  Sender Mode -");
-                    System.out.println("-----------------------------------");
-                    System.out.print("dummy@localhost: ~/mode/ ");
-                    mode = in.nextLine();
-                    break;
-                */
-                // change from AP mode to sender mode
-                case "sender":
-                    if(mode.equals("1")){
-                        SomethingAdhoc.turnoffAP();
-                        mode = "";
+                case "ap_mode":
+                    if(mode.equals("2")){
+                        System.out.println("[+] Turning on Ad-hoc AP");
+                        mode = "1";
                     }else{
-                        refreshAndPrintAdhocList();
+                        System.err.println("Error: This command work only in Sender mode");
+                    }
+                    break;
+                // change from AP mode to sender mode
+                case "sender_mode":
+                    if(mode.equals("1")){
+                        System.out.println("[+] Turn off AP and switch to sender Mode");
+                        mode = "2";
+                    }else{
                         System.err.println("Error: This command work only in AP mode");
                     }
-                    
                     break;
-                case "scan":
-                    if(mode.equals("2")){
+                case "rescan":
+                    // 0. precondition
+                    if(client==null || mode.equals("2")){
                         System.out.println("[+] Scan !");
-                        // 0. precondition
-                        if(client==null || !mode.equals("2")){
-                            System.err.println("Please switch to Sender Mode");
-                            break;
-                        }
                         refreshAndPrintAdhocList();
                     }else{
-                        System.err.println("Error: This command work only in Client mode");
+                        System.err.println("Error: This command work only in Sender mode");
                     }
                     break;
                 case "send":
@@ -130,7 +125,7 @@ public class SomethingAdhoc {
                         // 6. fall back to AP mode
                         // 7. force close client socket?
                     }else{
-                        System.err.println("Error: This command work only in CLient mode");
+                        System.err.println("Error: This command work only in Sender mode");
                     }
                     break;
                 default:
@@ -146,12 +141,13 @@ public class SomethingAdhoc {
         System.exit(0);
         
     }
-    public static void printBanner(String mode) throws InterruptedException{
+    public static void printBanner(String mode) throws InterruptedException, IOException{
+        //System.out.println("Debug: printBanner() is called");
         System.out.println("-----------------------------------");
         System.out.println("--    Something Ad-Hoc console   --");
         System.out.println("-----------------------------------");
         switch(mode){                
-            case "1":
+            case "1": // ap mode
                 client = null;
                 System.out.println("-- Mode: AP Mode              --");
                 System.out.println("-- Status: idle               --");
@@ -164,27 +160,35 @@ public class SomethingAdhoc {
                     5. connected w/ send data = a client is connected to send data to this node
                     6. connected w/ forward data = a client is connected to this as relay (forward to next hop)
                 */
-                System.out.println("Commands: sender, exit");
+                System.out.println("Commands: sender_mode, exit");
                 if(!apOn){ // should we re-enable AP every times for increate trailing number in ESSID?
+                   
                     SomethingAdhoc.modeAP();
                     apOn = true;
                 }
                 break;
-            case "2":
-                ap = null;
+            case "2": // sender mode
+                if(apOn){
+                    try {
+                        SomethingAdhoc.turnoffAP();
+                    } catch (IOException ex) {
+                        System.err.println("Error: I/O fail when turnOffAP");
+                    }
+                }
                 System.out.println("-- Mode: Sender Mode          --");
-                System.out.println("Commands: mode, scan, send, exit");
+                System.out.println("Commands: ap_mode, rescan, send, exit");
                 SomethingAdhoc.modeSender();
+                //refreshAndPrintAdhocList();
                 break;
             default:
-                System.out.println("Welcome! Commands: mode, exit");
+                System.out.println("Invalid mode!");
                 break;
         }
         System.out.println("-----------------------------------");
-        System.out.print("dummy@localhost: ~/");
+        System.out.print("dummy@localhost: ~/ ");
     }
     public static void modeAP(){
-        
+        //System.out.println("Debug: modeAP() is called");
         // 1. do AP setup stuffs
         ap = new AdhocAP(wifiInf, "Linux");
         int setupAdhocStatus = ap.setupAdhoc(); // random ssid
@@ -205,6 +209,7 @@ public class SomethingAdhoc {
         }
     }
     public static void modeSender() throws InterruptedException{
+        //System.out.println("Debug: modeSender() is called");
         // 1. do client setup stuffs
         client = new AdhocClient(wifiInf, "Linux");
         // 2. get list of adhoc AP
@@ -212,6 +217,7 @@ public class SomethingAdhoc {
     }
     
     public static void refreshAndPrintAdhocList() throws InterruptedException{
+        //System.out.println("Debug: refreshAndPrintAdhocList() is called");
         // 1. refresh adhoc list (re-scan and add to list)
         client.refreshAdhocList();
         System.out.println("Scanning...");
@@ -221,18 +227,23 @@ public class SomethingAdhoc {
         client.showAdhocList();
     }
     public static void turnoffAP() throws InterruptedException, IOException{
+        //System.out.println("Debug: turnoffAP() is called");
         if(ap instanceof AdhocAP){
-                        // 1. down AP (remove essid + set to managed mode)
-                        ap.downAP();
-                        ap = null;
-                        apOn = false;
-                        System.out.println("Shutdown AP...");
-                        Thread.sleep(5000);
-                    }
+            // 1. down AP (remove essid + set to managed mode)
+            ap.downAP();
+            ap = null;
+            apOn = false;
+            System.out.println("Shutdown AP...");
+            Thread.sleep(5000);
+        }else{
+            System.err.println("Error: cannot turnoff AP");
+        }
         if(t1 instanceof ServerSocketThread){
             // 2. down socket server thread
             System.out.println("Closing the Server Socket..");
             t1.stopServerSocket();
+        }else{
+            System.err.println("Error: cannot down server socket");
         }
     }
 }

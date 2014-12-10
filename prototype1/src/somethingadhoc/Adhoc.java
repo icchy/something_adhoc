@@ -112,7 +112,7 @@ public abstract class Adhoc {
             String netInfName = "lo";
             NetworkInterface netInf = null;
             Enumeration<NetworkInterface> intfs = NetworkInterface.getNetworkInterfaces();
-            //while(!netInfName.equals(net.networkInfName) && intfs.hasMoreElements()){
+            // prevent attempt to get mac addresss from 'lo' inferface ( which doesn't have mac addr, result in error)
             while(netInfName.equals("lo") && intfs.hasMoreElements()){
                  netInf = intfs.nextElement();
                  netInfName = netInf.getName();
@@ -155,6 +155,8 @@ public abstract class Adhoc {
         }
         
         // 4. reset interface again
+        net.downInterface();
+        net.upInterface();
         net.downInterface();
         net.upInterface();
         
