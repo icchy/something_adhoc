@@ -53,6 +53,7 @@ public class ServerProcess extends Thread{
                                         System.out.println("Server receive : "+buffer);
                                         
                                         // TODO: check this seperators to JSON only?
+                                        // to prevent fields contains seperator itself > encode each field?
                                         String seperator = "|_|=-=|_|";
                                         // 10.1 make sure received data in the correct format
                                         int count = buffer.length() - buffer.replace(seperator, "").length();

@@ -73,7 +73,7 @@ public class SomethingAdhoc {
                         }
                         // String relayName = client.adhocAvailable.get(0).ssid;
                         // 1. select destination node, at this rate.. just essid
-                        System.out.print("Enter Target Node: ");
+                        System.out.print("Enter Target Node (ex.senshin_BBB): ");
                         String targetNode = in.nextLine();
 
                         // @TODO:   the number at the end of node should not be entered
@@ -83,6 +83,7 @@ public class SomethingAdhoc {
                         SomethingRoute route = SomethingRoute.init();
 
                         // 2. update neighbor into routing table & discover routing
+                        
                         String routeRecord = route.getRoute(targetNode); // RRP + local neihjbor links
 
                         // 2.1 get Message to send
@@ -109,7 +110,7 @@ public class SomethingAdhoc {
 
                         if(relayName.equals(targetNode)){
                             // 1. destination is within the neighbor, send it directly
-                            t2 = new ModeSenderThread(message);
+                            t2 = new ModeSenderThread(message, 4);
 
                         }else if(routeRecord!=null){
                             // 2. send data+RTP to known route (in cached route file)
@@ -117,7 +118,7 @@ public class SomethingAdhoc {
 
                         }else{
                             // 3. send routing request packet neighbors to construct routing
-                            t2 = new ModeSenderThread(routeRecord);
+                            t2 = new ModeSenderThread(routeRecord, 1);
 
                         }
                         t2.start();

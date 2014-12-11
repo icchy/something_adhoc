@@ -8,8 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class ModeSenderThread extends Thread{
-    int portNumber;
-    String destinationIP;
+    
     
     // The client socket
     private static Socket clientSocket;
@@ -23,7 +22,9 @@ public class ModeSenderThread extends Thread{
     
     
     String message;
-    
+    final String seperator = "|_|=-=|_|";
+    final int portNumber = 13337;
+    final String destinationIP = "192.168.1.1";
     /*
     
     Constructor should support 3 mode as being passed by Main()
@@ -32,13 +33,24 @@ public class ModeSenderThread extends Thread{
     3. send routing request packet neighbors to construct routing
     
     */
-    public ModeSenderThread(String message){
-        this(message,"");
+    public ModeSenderThread(String data, int type){
+        
+        switch(type){
+            case 4: // destination is in neighborlist, send data directly
+                this.message = "4"+seperator+data;
+                break;
+            case 1: // forward route request to each neighbor
+                this.message = "1"+seperator+data;
+                break;
+            case 2: // forward only route back 
+                this.message = "2"+seperator+data;
+                break;
+        }
+        
     }
     public ModeSenderThread(String message, String route){
-        this.message = message;
-        portNumber = 13337;
-        destinationIP = "192.168.1.1";
+        // send data+RTP to known route (in cached route file)
+        this.message = "3"+seperator+message+seperator+route;
     }
     @Override
     public void run(){
