@@ -12,6 +12,9 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.json.simple.*;
 import org.json.simple.parser.*;
+import static somethingadhoc.SomethingAdhoc.ap;
+import static somethingadhoc.SomethingAdhoc.client;
+import static somethingadhoc.SomethingAdhoc.wifiInf;
 
 public class ServerProcess extends Thread{
         // uses for terminate thread
@@ -74,25 +77,12 @@ public class ServerProcess extends Thread{
                                             case "1":
                                                 // 11.1 route request
                                                 /*
-                                                2.1 type 1: Route Request Packet (RRP)
-                                                it will came from a source or an intermediate node
-                                                that about to reconstruct route from src. to dst.
-                                                2.1.1 if this node is dst. then send back route table (RTP).
-                                                back to source node (original sender)
-                                                2.1.2 Count number of hops (TTL style?) 
-                                                to prevent loop/unreachable node
-                                                maximum should be around ~12 hops? 
-                                                2.1.3 otherwise, pass RRP to neighbors
-                                                @TODO if there are many different paths to reach dest. node
-                                                    | should a node send only the shortest path or send all info back
-                                                    | becuase some paths may failed and others probably can replace it
-                                                
                                                 current route pattern: 
                                                 1. A find C but not in neighbor, then send 
-                                                {"senshin_A":["d":"senshin_C",]}
+                                                {"senshin_A":["senshin_B","senshin_D"]}|senshin_C
                                                 to ask neighbor (B)
                                                 2. B has C in neighbor then add to original route 
-                                                {"senshin_A":{"senshin_B":"sehshin_C"}}|senshin_C
+                                                {"senshin_A":[{"senshin_B":"sehshin_C"},"senshin_D"]}|senshin_C
                                                 then B send back to A
                                                 
                                                 json ref: http://www.tutorialspoint.com/json/json_java_example.htm
@@ -110,9 +100,6 @@ public class ServerProcess extends Thread{
                                                 
                                                 // 13. check destName against neighbor list
                                                 
-                                                // issue: how we can get neighbor list while still in ad-hoc mode?
-                                                // possible sol: switch to client mode, scan for neighbors, and switch back
-                                                
                                                 // if( destName in neighbor_list)
                                                 // then
                                                 //      mark the route data that it is in the next
@@ -120,24 +107,58 @@ public class ServerProcess extends Thread{
                                                 // else
                                                 //     connect & forward rquest to each neighbor
                                                 
-                                                // this is how we parse route in json format for further proess
-                                                // ex. add this node into current route before forward to neighbor
-                                                // parse json string in routeRaw
-                                                JSONParser parser = new JSONParser();
                                                 
-                                                JSONObject routeJson = (JSONObject)JSONValue.parse(payload);
-                                                
-                                                // top-level key
-                                                String key = String.valueOf(routeJson.keySet().toArray()[0]);
-                                                // value of top-level key
-                                                String value = String.valueOf(routeJson.get(key));
-                                                
+                                                // issue: how we can get neighbor list while still in ad-hoc mode?
+                                                // possible sol: switch to client mode, scan for neighbors, and switch back
+                                                ap.downAP();
+                                                client = new AdhocClient(wifiInf, "Linux");
+                                                String[] neighbors = client.getNeighbors().split("\n");
+                                                boolean found = false;
+                                                for(String n : neighbors){
+                                                    if(n.contains(destName)){
+                                                        found = true;
+                                                        break;
+                                                    }
+                                                }
+                                                ap = new AdhocAP(wifiInf, "Linux");
+                                                // if dest node is in neighbor list
+                                                if(found){
+                                                    // mark the route data that it is in the next
+                                                    JSONParser parser = new JSONParser();
+                                                    JSONObject routeJson = (JSONObject)JSONValue.parse(payload);
+                                                    
+                                                    // somehow traversal to this tree and mark it 
+                                                    // from: {"senshin_A":["senshin_B","senshin_D"]}|senshin_C
+                                                    // to: {"senshin_A":[{"senshin_B":"sehshin_C"},"senshin_D"]}|senshin_C
+                                                    // ps. the marking position is based up on where is this node in route info
+                                                    String sender = String.valueOf(routeJson.keySet().toArray()[0]);
+                                                    String route = String.valueOf(routeJson.get(sender));
+                                                    
+                                                    // and reply to forwarder who ask for dest node
+                                                    String newRoute = "";
+                                                    output.println(newRoute);
+                                                }else{
+                                                    
+                                                }
                                                 break;
                                             case "2":
                                                 // 11.2 route reply
                                                 // 1. extract route
-                                                // 2. switch to client mode
-                                                // 3. forward route info
+                                               
+                                                JSONParser parser = new JSONParser();
+                                                
+                                                JSONObject routeJson = (JSONObject)JSONValue.parse(payload);
+                                                
+                                                // 2. find current node and get next hop AP name from route info
+                                                // @TODO: how to search through these json and get the next hop?
+                                                String sender = String.valueOf(routeJson.keySet().toArray()[0]);
+                                                // tree-like structure route info for sender
+                                                String route = String.valueOf(routeJson.get(sender));
+                                                // go deep until found this node and get nex hop
+                                                // ...
+                                                
+                                                // 3. switch to client mode
+                                                // 4. forward route info
                                                 break;
                                             case "3":
                                                 // 11.3 data forward
