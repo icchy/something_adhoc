@@ -14,6 +14,7 @@ import org.json.simple.*;
 import org.json.simple.parser.*;
 import static somethingadhoc.SomethingAdhoc.ap;
 import static somethingadhoc.SomethingAdhoc.client;
+import static somethingadhoc.SomethingAdhoc.t2;
 import static somethingadhoc.SomethingAdhoc.wifiInf;
 
 public class ServerProcess extends Thread{
@@ -120,14 +121,17 @@ public class ServerProcess extends Thread{
                                                         break;
                                                     }
                                                 }
+                                                // TODO: I hope that the connected client still in ap
+                                                // while we fallback to client and get back to ap :|
                                                 ap = new AdhocAP(wifiInf, "Linux");
                                                 // if dest node is in neighbor list
                                                 if(found){
+                                                    System.out.println("Debug: found destination in neighbor list.");
                                                     // mark the route data that it is in the next
                                                     JSONParser parser = new JSONParser();
                                                     JSONObject routeJson = (JSONObject)JSONValue.parse(payload);
                                                     
-                                                    // somehow traversal to this tree and mark it 
+                                                    // json stuffs: somehow traversal to this tree and mark it 
                                                     // from: {"senshin_A":["senshin_B","senshin_D"]}|senshin_C
                                                     // to: {"senshin_A":[{"senshin_B":"sehshin_C"},"senshin_D"]}|senshin_C
                                                     // ps. the marking position is based up on where is this node in route info
@@ -138,8 +142,20 @@ public class ServerProcess extends Thread{
                                                     String newRoute = "";
                                                     output.println(newRoute);
                                                 }else{
-                                                    
+                                                    System.out.println("Debug: dest. not found in neighbor list");
+                                                    // connect & forward route request to each neighbor
+                                                    ap.downAP();
+                                                    for(String n : neighbors){
+                                                        System.out.println("Debug: forward RRP to : "+n);
+                                                        client = new AdhocClient(wifiInf, "Linux");
+                                                        // add neighbors into new route
+                                                        // json stuffs
+                                                        
+                                                        String newRoute="";
+                                                        t2 = new ModeSenderThread(newRoute, 4);
+                                                    }
                                                 }
+                                                System.out.println("Debug: finish type 1 op.");
                                                 break;
                                             case "2":
                                                 // 11.2 route reply
