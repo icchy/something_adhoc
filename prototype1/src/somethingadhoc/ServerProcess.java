@@ -41,6 +41,8 @@ public class ServerProcess extends Thread{
                             1. client send '__exit__' command
                             2. ServerSocketThread terminate this process by terminateServer()
                         */
+                        
+                        // no need loop here b/c op done at once?
 			//while(running.get()){
 				// 8. grab data from client
 				buffer = input.readLine(); 
@@ -49,7 +51,8 @@ public class ServerProcess extends Thread{
 					// 9. TODO: logic of relay stuffs will occur here!
                                         //RelayProcess(buffer);
                                         System.out.println("Server receive : "+buffer);
-                                        // output.println(rev); // send dummy to client
+                                        
+                                        // TODO: check this seperators to JSON only?
                                         String seperator = "|_|=-=|_|";
                                         // 10.1 make sure received data in the correct format
                                         int count = buffer.length() - buffer.replace(seperator, "").length();
@@ -106,13 +109,16 @@ public class ServerProcess extends Thread{
                                                 // 13. check destName against neighbor list
                                                 
                                                 // issue: how we can get neighbor list while still in ad-hoc mode?
+                                                // possible sol: switch to client mode, scan for neighbors, and switch back
                                                 
                                                 // if( destName in neighbor_list)
                                                 // then
                                                 //      mark the route data that it is in the next
+                                                //      output.println(newRoute); // send back?
                                                 // else
-                                                //     forward to neighbors
+                                                //     connect & forward rquest to each neighbor
                                                 
+                                                // this is how we parse route in json format for further checks
                                                 // parse json string in routeRaw
                                                 JSONParser parser = new JSONParser();
                                                 
@@ -137,6 +143,7 @@ public class ServerProcess extends Thread{
                                                 break;
                                             default:
                                                 // malform type
+                                                System.err.println("Error: Invalid packet type.");
                                         }
 
                                         /*
