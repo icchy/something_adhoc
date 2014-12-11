@@ -2,13 +2,14 @@
 package somethingadhoc;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
@@ -119,7 +120,8 @@ public class ServerProcess extends Thread{
                                                 // else
                                                 //     connect & forward rquest to each neighbor
                                                 
-                                                // this is how we parse route in json format for further checks
+                                                // this is how we parse route in json format for further proess
+                                                // ex. add this node into current route before forward to neighbor
                                                 // parse json string in routeRaw
                                                 JSONParser parser = new JSONParser();
                                                 
@@ -130,17 +132,25 @@ public class ServerProcess extends Thread{
                                                 // value of top-level key
                                                 String value = String.valueOf(routeJson.get(key));
                                                 
-                                                
-                                                
                                                 break;
                                             case "2":
                                                 // 11.2 route reply
+                                                // 1. extract route
+                                                // 2. switch to client mode
+                                                // 3. forward route info
                                                 break;
                                             case "3":
                                                 // 11.3 data forward
+                                                // 1. extract data / route
+                                                // 2. switch to client mode
+                                                // 3. forward data according to route info
                                                 break;
                                             case "4":
                                                 // 11.4 data
+                                                // 1. just save it
+                                                String filename="/tmp/somethingadhoc_"+UUID.randomUUID().toString()+".tmp";
+                                                FileWriter out = new FileWriter(new File(filename));
+                                                out.append(System.getProperty("line.separator")+payload);
                                                 break;
                                             default:
                                                 // malform type
