@@ -48,7 +48,7 @@ public class ServerProcess extends Thread{
                         */
                         
                         // no need loop here b/c op done at once?
-			//while(running.get()){
+			while(running.get()){
 				// 8. grab data from client
 				buffer = input.readLine(); 
                                 
@@ -198,9 +198,10 @@ public class ServerProcess extends Thread{
                                         if(buffer.contains("__exit__")){
                                             break;
                                         }*/
+                                        break; 
 				}
                                 
-			//}
+			}
                         
 			
 		} catch (IOException e) {
