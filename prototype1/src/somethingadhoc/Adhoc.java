@@ -146,7 +146,7 @@ public abstract class Adhoc {
             System.err.println("Cannot turn off ESSID");
             return exitCode;
         }
-        
+        net.downInterface();
         // 3. back to default mode (managed mode)
         exitCode = net.defaultWifiMode();
         if(exitCode != 0){
