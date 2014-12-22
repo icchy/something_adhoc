@@ -20,20 +20,20 @@ public class AdhocClient extends Adhoc{
     
     // print to console
     public void showAdhocList(){
-        //int totalAdhoc = adhocAvailable.size(); // this is all ad-hoc
-        int totalAdhoc = 0; // count for only senshin
+        int totalAdhoc = adhocAvailable.size(); // this is all ad-hoc
+        int totalSenshinAdhoc = 0; // count for only senshin
         String output = "";
-        for (int i = 1; i <= totalAdhoc; i++) {
-            String adhocName = adhocAvailable.get(i-1).ssid;
+        for (int i = 0; i < totalAdhoc; i++) {
+            String adhocName = adhocAvailable.get(i).ssid;
             if(adhocName.contains("senshin")){
                 // prevent this AP to found itself cached on the air LoL
-                if(adhocName.equals(super.getMacAddress().replaceAll("-",""))){
-                    output += "\n"+i+": "+adhocName;
-                    totalAdhoc++;
+                if(!adhocName.equals(super.getMacAddress().replaceAll("-",""))){
+                    output += "\n"+(i+1)+": "+adhocName;
+                    totalSenshinAdhoc++;
                 }
             }
         }
-        System.out.println("Found ad-hoc: "+totalAdhoc);
+        System.out.println("Found ad-hoc: "+totalSenshinAdhoc);
         System.out.println(output);
     }
     
