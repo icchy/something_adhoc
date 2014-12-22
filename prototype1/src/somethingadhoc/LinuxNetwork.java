@@ -175,7 +175,7 @@ public class LinuxNetwork extends OSNetwork{
     public int setupAP(String ssid, String mode, String ipAddress, String subnetMask) {
         final String channel="4";
         final String freq="2.412G";
-        final String secret="73656e7368";
+        //final String secret="73656e7368";
         String[] commands = {
                         // 1. down network interface
 			 "ip link set "+networkInfName+" down",
@@ -188,8 +188,8 @@ public class LinuxNetwork extends OSNetwork{
                         // 5. setup Freq 
                          "iwconfig "+networkInfName+" freq "+freq,
                          // 5. setup Freq 
-                         //"iwconfig "+networkInfName+" key open"
-                         "iwconfig "+networkInfName+" key "+secret
+                         "iwconfig "+networkInfName+" key off"
+                         //"iwconfig "+networkInfName+" key "+secret
 		 };
         int exitCode = execCmds(commands);
         if(exitCode == 0){
