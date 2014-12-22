@@ -27,7 +27,7 @@ public class AdhocClient extends Adhoc{
             String adhocName = adhocAvailable.get(i).ssid;
             if(adhocName.contains("senshin")){
                 // prevent this AP to found itself cached on the air LoL
-                if(!adhocName.equals(super.getMacAddress().replaceAll("-",""))){
+                if(!adhocName.contains(super.getMacAddress().replaceAll("-",""))){
                     output += "\n"+(i+1)+": "+adhocName;
                     totalSenshinAdhoc++;
                 }
