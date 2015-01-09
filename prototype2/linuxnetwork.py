@@ -24,17 +24,20 @@ class LinuxNetWork(OSNetwork):
 
     def set_Adhoc(self, adhocName):
         cmds = ["ifconfig %s down"%(self.wifiInf),
-        "iwconfig %s mode ad-hoc"%(self.wifiInf),
-        "iwconfig %s essid %s"%(self.wifiInf, adhocName),
-        "ifconfig %s up"%(self.wifiInf),
-        "ifconfig %s 192.168.1.1"%(self.wifiInf)]
+                "iwconfig %s mode ad-hoc"%(self.wifiInf),
+                "iwconfig %s essid %s"%(self.wifiInf, adhocName),
+                "ifconfig %s up"%(self.wifiInf),
+                "ifconfig %s 192.168.1.1"%(self.wifiInf)]
         execCmds(cmds)
 
     def get_if(self):
         return __import__('netifaces').interfaces()
 
-    def connect_AP(self):
-        pass
+    def connect_AP(self, apName):
+        cmds = ["iwconfig %s mode managed"%(self.wifiInf),
+                "iwconfig %s essid %s"%(apName),
+                "ifconfig %s 192.168.1.10 netmask 255.255.255.0"%(apName)]
+        execCmds(cmds)
 
 
 def hasCommand(cmd):
