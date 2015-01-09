@@ -1,5 +1,5 @@
 #!/bin/sh
-P="/root/Desktop"
+P="/home/icchy/machome/Documents/adv_inf"
 cd ${P}/something_adhoc/
 git pull
 javac ${P}/something_adhoc/prototype1/src/somethingadhoc/*.java

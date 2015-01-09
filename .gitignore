@@ -2,3 +2,5 @@ prototype1/src/somethingadhoc/Test.java
 prototype1/src/somethingadhoc/*.class
 MyFirstApp/.gradle/
 MyFirstApp/.idea/
+prototype2/tmp/
+*.pyc

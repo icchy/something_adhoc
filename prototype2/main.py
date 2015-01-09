@@ -1,9 +1,20 @@
 
+import sys, platform
+
+sys.path.append('lib')
 
 
-wifiInf = raw_input("Enter WiFi interface: ").strip()
+import logging
 
-command = ""
+def init():
+    wifiInf = raw_input("Enter Wifi interface: ").strip()
 
-while command != "exit":
+def main():
+    command = ""
+    while command != "exit":
+        command = raw_input("")
+        if command == "scan":
+            pass
+
     pass
+
