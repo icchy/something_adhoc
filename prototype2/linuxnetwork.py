@@ -42,11 +42,13 @@ class LinuxNetWork(OSNetwork):
 
     def set_Adhoc(self, adhocName):
         self.delIP("192.168.20.10")
-        self.upAP()
+        self.downAP()
         # cmds = ["ifconfig %s 192.168.1.1 netmask 255.255.255.0"%(self.wifiInf),
         #         "iwconfig %s essid %s mode ad-hoc channel auto"%(self.wifiInf, adhocName)]
-        cmds = ["iw dev %s set type ibss"%(self.wifiInf),
-                "iw dev %s ibss join %s 2412"%(self.wifiInf, adhocName)]
+        cmds = ["iw dev %s set type ibss"%(self.wifiInf)]
+        execCmds(cmds)
+        self.upAP()
+        cmds = ["iw dev %s ibss join %s 2412"%(self.wifiInf, adhocName)]
         execCmds(cmds)
         self.addIP("192.168.20.1")
 
@@ -55,7 +57,7 @@ class LinuxNetWork(OSNetwork):
 
     def connect_AP(self, apName):
         self.delIP("192.168.20.1")
-        self.upAP()
+        self.downAP()
         # cmds = ["iwconfig %s essid %s mode ad-hoc channel auto"%(self.wifiInf, apName),
         #         "ifconfig %s 192.168.1.10 netmask 255.255.255.0"%(self.wifiInf)]
         cmds = ["iw dev %s set type ibss"%(self.wifiInf),

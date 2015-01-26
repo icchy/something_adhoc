@@ -47,6 +47,9 @@ def main():
 
     print "Bye!"
 
+def onConnected():
+    
+
 
 
 if __name__ == "__main__":

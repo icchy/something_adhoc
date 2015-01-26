@@ -38,4 +38,4 @@ class ServerHandler(asyncore.dispatcher_with_send):
 import sys
 if len(sys.argv) > 1 and sys.argv[1] == "debug":
     server = Server('0.0.0.0', 10080)
-    asyncore.loop()
+    # asyncore.loop()

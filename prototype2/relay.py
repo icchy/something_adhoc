@@ -3,9 +3,11 @@
 class Relay:
     myNodeName = ""
 
-    def __init__(self, myNodeName):
-        f = open("/tmp/something_route_" + __import__('random').randint(10000, 99999), "w")
-        self.myNodeName = myNodeName
+    def __init__(self, net, msg):
+        self.myNodeName = net.wifiInf
+
+        # f = open("/tmp/something_route_" + __import__('random').randint(10000, 99999), "w")
+        # self.myNodeName = myNodeName
 
 
 
@@ -16,4 +18,3 @@ class Relay:
     #
     # def getAllRoute():
     #     s = open('/tmp/')
-
