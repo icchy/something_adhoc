@@ -1,38 +1,41 @@
-from socket import socket
-import threading
+import asyncore, socket
 
-class Server:
-    def __init__(self, addr, port):
-        self.addr = addr
+class Server(asyncore.dispatcher):
+    def __init__(self, host, port):
+        asyncore.dispatcher.__init__(self)
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.set_reuse_addr()
+        self.bind((host, port))
+        self.listen(1)
+        self.host = host
         self.port = port
-
-
-    def run(self):
         self.msg = ""
-        self.th = threading.Thread(target=self.upserver)
-        self.th.setDaemon(True)
-        self.th.start()
 
-    def upserver(self):
-        self.sock = socket(AF_INET, SOCK_STREAM)
-        self.sock.bind((self.addr, self.port))
-        self.sock.listen(5)
-        self.flag = True
-        csock, addr = self.sock.accept()
-        while True:
-            data = csock.recv(1024)
-            if not data:
-                break
-            self.msg += data
-
-        self.flag = False
+    def handle_accept(self):
+        sock, addr = self.accept()
+        if sock and addr:
+            print 'connection from %s' % str(addr)
+            handler = ServerHandler(sock)
 
     def stop(self):
-        self.flag = False
-        self.sock.close()
+        self.close()
 
-    def is_running(self):
-        return self.flag
-    
-    def get_msg(self):
-        return self.msg
+class ServerHandler(asyncore.dispatcher_with_send):
+    def handle_read(self):
+        data = ""
+        while True:
+            try:
+                tmp = self.recv(1024)
+            except:
+                break
+            if not tmp:
+                break
+            data += tmp
+
+        print "received %d bytes data: "%len(data) + repr(data)
+
+
+import sys
+if len(sys.argv) > 1 and sys.argv[1] == "debug":
+    server = Server('0.0.0.0', 10080)
+    asyncore.loop()

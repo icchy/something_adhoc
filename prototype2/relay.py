@@ -8,10 +8,12 @@ class Relay:
         self.myNodeName = myNodeName
 
 
-    def getRoute(nodeName):
 
-        pass
+    # currently not implemented
 
-    def getAllRoute():
-        s = open('/tmp/')
+    # def getRoute(nodeName):
+    #     pass
+    #
+    # def getAllRoute():
+    #     s = open('/tmp/')
 

@@ -27,6 +27,18 @@ class OSNetwork:
         else:
             raise NotImplementedError
 
+    def downAP(self):
+        if self.__class__.__name__ == 'OSNetwork':
+            return self.net.downAP()
+        else:
+            raise NotImplementedError
+
+    def upAP(self):
+        if self.__class__.__name__ == 'OSNetwork':
+            return self.net.upAP()
+        else:
+            raise NotImplementedError
+
     def get_APs(self):
         if self.__class__.__name__ == 'OSNetwork':
             return self.net.get_APs()
@@ -50,6 +62,12 @@ class OSNetwork:
     def connect_AP(self, ssid):
         if self.__class__.__name__ == 'OSNetwork':
             return self.net.connect_AP(ssid)
+        else:
+            raise NotImplementedError
+
+    def pingtest(self, ip):
+        if self.__class__.__name__ == 'OSNetwork':
+            return self.net.pingtest(ip)
         else:
             raise NotImplementedError
 
