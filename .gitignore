@@ -4,3 +4,4 @@ MyFirstApp/.gradle/
 MyFirstApp/.idea/
 prototype2/tmp/
 *.pyc
+*.swp
