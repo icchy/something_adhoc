@@ -1,8 +1,9 @@
 import socket
+import relay
 
 class Server:
-    def __init__(self, host, port):
-        print "called init"
+    def __init__(self, net, host, port):
+        self.net = net
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.bind((host, port))
@@ -24,6 +25,8 @@ class Server:
                 data += tmp
 
             print "received %d bytes data: "%(len(data)) + repr(data)
+
+            relay.Relay(self.net, data)
 
             return True
 

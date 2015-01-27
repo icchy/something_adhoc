@@ -5,6 +5,12 @@ import commands
 class OSNetwork:
     curOS = ""
     wifiInf = ""
+    macaddr = ""
+    prefix = ""
+    myNode = ""
+    default_host = ""
+    default_client = ""
+    default_port = ""
 
     def __init__(self, wifiInf):
         self.wifiInf = wifiInf

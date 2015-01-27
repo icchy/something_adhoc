@@ -5,30 +5,36 @@ from server import Server
 import wifiCommands
 import logging
 
-prefix = "senshin"
-macaddr = ""
-
 default_host = "192.168.20.1"
 default_client = "192.168.20.10"
 default_port = 13337
 
+prefix = "senshin"
 
 def main():
-    wifiInf = raw_input("Enter Wifi interface: ").strip()
+    try:
+        wifiInf = raw_input("Enter Wifi interface: ").strip()
+    except:
+        sys.exit(2)
     command = ""
     net = OSNetwork(wifiInf)
-    macaddr = ''.join(__import__('netifaces').ifaddresses(wifiInf)[17][0]['addr'].upper().split(':'))
+    net.macaddr = ''.join(__import__('netifaces').ifaddresses(wifiInf)[17][0]['addr'].upper().split(':'))
+    net.prefix = prefix
+    net.myNode = net.prefix + "_" + net.macaddr
+    net.default_host = default_host
+    net.default_client = default_client
+    net.default_port = default_port
 
-    net.set_Adhoc(prefix + "_" + macaddr)
+    net.set_Adhoc(prefix + "_" + net.macaddr)
 
     while command != "exit":
-        with Server('0.0.0.0', default_port) as serv:
+        with Server(net, '0.0.0.0', default_port) as serv:
             if serv.wait():
                 continue
 
         try:
-            command = raw_input("input command(scan, send, exit): ")
-        except EOFError:
+            command = raw_input("input command(scan, send, relay, exit): ")
+        except:
             break
 
         if command == "scan":
@@ -47,14 +53,13 @@ def main():
 
             continue
 
+        if command == "relay":
+            continue
 
-        print "unknown command: " + command
+        if command != "exit":
+            print "unknown command: " + command
 
     print "Bye!"
-
-def onConnected():
-    print "called"
-    
 
 
 
