@@ -25,9 +25,8 @@ def main():
     net.default_client = default_client
     net.default_port = default_port
 
-    net.set_Adhoc(prefix + "_" + net.macaddr)
-
     while command != "exit":
+        net.set_Adhoc(prefix + "_" + net.macaddr)
         with Server(net, '0.0.0.0', default_port) as serv:
             if serv.wait():
                 continue
@@ -40,13 +39,15 @@ def main():
         if command == "scan":
             aps = net.get_APs()
             for ap in aps:
-                print "SSID: " + ap.ssid
+                print "SSID: " + ap
             continue
 
         if command == "send":
             dist = raw_input("input target SSID: ").strip()
             msg = raw_input("input message: ").strip()
-            __import__('relay').Relay(net, msg)
+            import relay
+            rel = relay.Relay(net)
+            rel.send(dist, msg)
 
             continue
 
@@ -71,3 +72,4 @@ if __name__ == "__main__":
     del os, histfile
 
     main()
+

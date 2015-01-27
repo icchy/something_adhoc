@@ -35,8 +35,12 @@ class LinuxNetWork(OSNetwork):
 
     def get_APs(self):
         self.upAP()
+        ret = []
+        aps = wifi.Cell.all(self.wifiInf)
         try:
-            return wifi.Cell.all(self.wifiInf)
+            for ap in aps:
+                ret.append(ap.ssid)
+            return ret
         except wifi.exceptions.InterfaceError:
             pass
 

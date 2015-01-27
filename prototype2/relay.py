@@ -14,14 +14,23 @@ class Relay:
         self.net = net
         self.myNode = net.myNode
         print "myNode:" + self.myNode
-        if self.parse(data):
-            self.relay()
-        else:
+        if not self.parse(data):
             print "parse failed"
 
+    def __init__(self, net):
+        self.net = net
+        self.myNode = net.myNode
+        print "myNode:" + self.myNode
+
     def create_message(self, srcNode, distNode, relayNode, msg):
-        self.msg = srcNode + ":" + ":".join(relayNode) + "::" + distNode + ":" + msg
+        if len(relayNode):
+            self.msg = srcNode + ":" + ":".join(relayNode) + "::" + distNode + ":" + msg
+        else:
+            self.msg = srcNode + "::" + distNode + ":" + msg
         return self.msg
+
+    def send(self, distNode, msg):
+        send(self.net, self.create_message(self.net.myNode, distNode, self.relayNode, msg), [])
 
     def parse(self, msg):
         res = parser.parser(msg)
@@ -39,13 +48,9 @@ class Relay:
             if self.distNode == self.myNode: # here is distination
                 receive(self.srcNode, self.msg)
             elif self.srcNode == self.myNode: # here is srcNode
-                send(self.net, create_message(self.srcNode, self.distNode, [], self.msg), [])
+                send(self.net, self.create_message(self.srcNode, self.distNode, [], self.msg), [])
             else: # just relay
-                send(self.net, create_message(self.srcNode, self.distNode, self.relayNode + [self.myNode], self.msg), (self.srcNode + self.relayNode))
-        else:
-            print "something wrong. check format of message."
-
-
+                send(self.net, self.create_message(self.srcNode, self.distNode, self.relayNode + [self.myNode], self.msg), (self.srcNode + self.relayNode))
 
 
 
