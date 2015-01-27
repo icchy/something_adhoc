@@ -11,12 +11,13 @@ class Relay:
     net = None
 
     def __init__(self, net, data):
-        import main
         self.net = net
         self.myNode = net.myNode
         print "myNode:" + self.myNode
-        self.parse(data)
-        self.relay()
+        if self.parse(data):
+            self.relay()
+        else:
+            print "parse failed"
 
     def create_message(self, srcNode, distNode, relayNode, msg):
         self.msg = srcNode + ":" + ":".join(relayNode) + "::" + distNode + ":" + msg

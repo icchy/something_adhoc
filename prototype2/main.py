@@ -46,10 +46,7 @@ def main():
         if command == "send":
             dist = raw_input("input target SSID: ").strip()
             msg = raw_input("input message: ").strip()
-            res = wifiCommands.send(dist, net, default_host, default_port, msg)
-
-            if not res:
-                print "sending failed"
+            __import__('relay').Relay(net, msg)
 
             continue
 
