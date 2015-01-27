@@ -10,13 +10,6 @@ class Relay:
     msg = ""
     net = None
 
-    def __init__(self, net, data):
-        self.net = net
-        self.myNode = net.myNode
-        print "myNode:" + self.myNode
-        if not self.parse(data):
-            print "parse failed"
-
     def __init__(self, net):
         self.net = net
         self.myNode = net.myNode
@@ -30,7 +23,7 @@ class Relay:
         return self.msg
 
     def send(self, distNode, msg):
-        send(self.net, self.create_message(self.net.myNode, distNode, self.relayNode, msg), [])
+        send(self.net, self.create_message(self.net.myNode, distNode, self.relayNode, msg), [self.srcNode])
 
     def parse(self, msg):
         res = parser.parser(msg)
@@ -47,18 +40,24 @@ class Relay:
         if self.srcNode and self.distNode and self.relayNode:
             if self.distNode == self.myNode: # here is distination
                 receive(self.srcNode, self.msg)
-            elif self.srcNode == self.myNode: # here is srcNode
-                send(self.net, self.create_message(self.srcNode, self.distNode, [], self.msg), [])
             else: # just relay
                 send(self.net, self.create_message(self.srcNode, self.distNode, self.relayNode + [self.myNode], self.msg), (self.srcNode + self.relayNode))
 
 
 
 def send(net, msg, pastNode):
+    try:
+        strictedNode = open('strictedAddr').read().strip().split('\n')
+        pastNode = pastNode + strictedNode
+    except:
+        pass
+
     aps = net.get_APs()
     for ap in aps:
-        if ap not in pastNode and parser.get_prefix(ap):
-            wifiCommands.send(ap, net, net.default_host, net.default_port, msg)
+        if ap not in pastNode and parser.get_prefix(ap) in ap:
+            if wifiCommands.send(ap, net, net.default_host, net.default_port, msg): return True
+    print "failed to send"
+
 
 def receive(srcNode, msg):
     print "received message from %s : %s"%(srcNode, msg)

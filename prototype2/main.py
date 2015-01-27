@@ -16,7 +16,8 @@ def main():
         wifiInf = raw_input("Enter Wifi interface: ").strip()
     except:
         sys.exit(2)
-    command = ""
+
+    # init for net
     net = OSNetwork(wifiInf)
     net.macaddr = ''.join(__import__('netifaces').ifaddresses(wifiInf)[17][0]['addr'].upper().split(':'))
     net.prefix = prefix
@@ -25,11 +26,17 @@ def main():
     net.default_client = default_client
     net.default_port = default_port
 
+    server_flag = True
+
+    command = ""
     while command != "exit":
-        net.set_Adhoc(prefix + "_" + net.macaddr)
-        with Server(net, '0.0.0.0', default_port) as serv:
-            if serv.wait():
-                continue
+        if server_flag:
+            net.set_Adhoc(prefix + "_" + net.macaddr)
+            with Server(net, '0.0.0.0', default_port) as serv:
+                if serv.wait():
+                    continue
+
+        server_flag = False
 
         try:
             command = raw_input("input command(scan, send, relay, exit): ")
@@ -38,8 +45,10 @@ def main():
 
         if command == "scan":
             aps = net.get_APs()
+            import parser
             for ap in aps:
-                print "SSID: " + ap
+                if parser.get_prefix(ap) and parser.get_prefix(ap) == prefix:
+                    print "SSID: " + ap
             continue
 
         if command == "send":
@@ -52,6 +61,7 @@ def main():
             continue
 
         if command == "relay":
+            server_flag = True
             continue
 
         if command != "exit":

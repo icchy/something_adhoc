@@ -10,30 +10,31 @@ class Server:
         self.sock.listen(1)
 
     def wait(self):
+        print "myNode : " + self.net.myNode
         print "Launching server... press Ctrl-C to quit relay mode"
 
         try:
             self.csock, self.addr = self.sock.accept()
-            data = ""
-            while True:
-                try:
-                    tmp = self.csock.recv(1024)
-                except:
-                    break
-                if not tmp:
-                    break
-                data += tmp
-
-            print "received %d bytes data: "%(len(data)) + repr(data)
-
-            relay.Relay(self.net, data)
-
-            return True
-
         except KeyboardInterrupt:
             self.sock.close()
-
             return False
+
+        data = ""
+        while True:
+            try:
+                tmp = self.csock.recv(1024)
+            except:
+                break
+            if not tmp:
+                break
+            data += tmp
+
+        print "received %d bytes data: "%(len(data)) + repr(data)
+
+        rel = relay.Relay(self.net)
+        rel.relay()
+
+        return True
 
     def __enter__(self):
         return self
