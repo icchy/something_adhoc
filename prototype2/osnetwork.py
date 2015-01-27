@@ -11,6 +11,7 @@ class OSNetwork:
     default_host = ""
     default_client = ""
     default_port = ""
+    debug = False
 
     def __init__(self, wifiInf):
         self.wifiInf = wifiInf

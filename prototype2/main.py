@@ -26,6 +26,9 @@ def main():
     net.default_client = default_client
     net.default_port = default_port
 
+    if len(sys.argv) > 1 and sys.argv[1] == 'debug':
+        net.debug = True
+
     server_flag = True
 
     command = ""

@@ -10,16 +10,21 @@ def send(apName, net, host, port, msg):
     flag = False
 
     for _ in range(5):
-        if not net.pingtest(host):
+        try:
+            net.pingtest(host)
+        except:
             print "could not connect to " + apName
             print "try again within 2 seconds..."
+
             try:
                 __import__('time').sleep(2)
             except KeyboardInterrupt:
                 break
-        else:
-            flag = True
-            break
+
+            continue
+
+        flag = True
+        break
 
     if not flag:
         print "could not connect to " + apName

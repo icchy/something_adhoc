@@ -13,7 +13,6 @@ class Relay:
     def __init__(self, net):
         self.net = net
         self.myNode = net.myNode
-        print "myNode:" + self.myNode
 
     def create_message(self, srcNode, distNode, relayNode, msg):
         if len(relayNode):
@@ -37,10 +36,13 @@ class Relay:
             return False
 
     def relay(self):
-        if self.srcNode and self.distNode and self.relayNode:
+        print self.srcNode, self.distNode, self.relayNode, self.myNode
+        if self.srcNode and self.distNode:
             if self.distNode == self.myNode: # here is distination
                 receive(self.srcNode, self.msg)
             else: # just relay
+                if self.net.debug:
+                    print "relaying..."
                 send(self.net, self.create_message(self.srcNode, self.distNode, self.relayNode + [self.myNode], self.msg), (self.srcNode + self.relayNode))
 
 
@@ -54,9 +56,11 @@ def send(net, msg, pastNode):
 
     aps = net.get_APs()
     for ap in aps:
-        if ap not in pastNode and parser.get_prefix(ap) in ap:
+        pre = parser.get_prefix(ap)
+        if ap not in pastNode and pre and pre in ap:
             if wifiCommands.send(ap, net, net.default_host, net.default_port, msg): return True
-    print "failed to send"
+    if net.debug:
+        print "failed to send"
 
 
 def receive(srcNode, msg):

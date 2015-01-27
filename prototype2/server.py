@@ -29,9 +29,11 @@ class Server:
                 break
             data += tmp
 
-        print "received %d bytes data: "%(len(data)) + repr(data)
+        if self.net.debug:
+            print "received %d bytes data: "%(len(data)) + repr(data)
 
         rel = relay.Relay(self.net)
+        rel.parse(data)
         rel.relay()
 
         return True
