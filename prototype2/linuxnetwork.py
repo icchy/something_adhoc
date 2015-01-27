@@ -60,14 +60,17 @@ class LinuxNetWork(OSNetwork):
         self.downAP()
         # cmds = ["iwconfig %s essid %s mode ad-hoc channel auto"%(self.wifiInf, apName),
         #         "ifconfig %s 192.168.1.10 netmask 255.255.255.0"%(self.wifiInf)]
-        cmds = ["iw dev %s set type ibss"%(self.wifiInf),
-                "iw dev %s ibss join %s 2412"%(self.wifiInf, apName)]
+        cmds = ["iw dev %s set type ibss"%(self.wifiInf)]
+        execCmds(cmds)
+        self.upAP()
+        cmds = ["iw dev %s ibss join %s 2412"%(self.wifiInf, apName)]
         execCmds(cmds)
         self.addIP("192.168.20.10")
 
     def pingtest(self, ip):
         cmds = ["ping -c 3 %s"%(ip)]
         execCmds(cmds)
+        return True
 
     def delIP(self, ip):
         cmds = ["ip addr del %s/24 dev %s"%(ip, self.wifiInf)]

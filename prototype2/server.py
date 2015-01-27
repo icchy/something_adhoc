@@ -1,41 +1,43 @@
-import asyncore, socket
+import socket
 
-class Server(asyncore.dispatcher):
+class Server:
     def __init__(self, host, port):
-        asyncore.dispatcher.__init__(self)
-        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.set_reuse_addr()
-        self.bind((host, port))
-        self.listen(1)
-        self.host = host
-        self.port = port
-        self.msg = ""
+        print "called init"
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.sock.bind((host, port))
+        self.sock.listen(1)
 
-    def handle_accept(self):
-        sock, addr = self.accept()
-        if sock and addr:
-            print 'connection from %s' % str(addr)
-            handler = ServerHandler(sock)
+    def wait(self):
+        print "Launching server... press Ctrl-C to quit relay mode"
 
-    def stop(self):
-        self.close()
+        try:
+            self.csock, self.addr = self.sock.accept()
+            data = ""
+            while True:
+                try:
+                    tmp = self.csock.recv(1024)
+                except:
+                    break
+                if not tmp:
+                    break
+                data += tmp
 
-class ServerHandler(asyncore.dispatcher_with_send):
-    def handle_read(self):
-        data = ""
-        while True:
-            try:
-                tmp = self.recv(1024)
-            except:
-                break
-            if not tmp:
-                break
-            data += tmp
+            print "received %d bytes data: "%(len(data)) + repr(data)
 
-        print "received %d bytes data: "%len(data) + repr(data)
+            return True
 
+        except KeyboardInterrupt:
+            self.sock.close()
 
-import sys
-if len(sys.argv) > 1 and sys.argv[1] == "debug":
-    server = Server('0.0.0.0', 10080)
-    # asyncore.loop()
+            return False
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.sock.close()
+        try:
+            self.csock.close()
+        except:
+            pass

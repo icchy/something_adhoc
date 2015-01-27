@@ -43,6 +43,7 @@ def parser(_msg):
 
     return (chkflag, srcNode, distNode, relayNode, msg)
 
+
 def chkNode(node):
     return chkMAC(node[node.rfind("_")+1:])
 
@@ -57,3 +58,9 @@ def chkMAC(addr):
             return False
 
     return True
+
+def get_prefix(node):
+    if chkNode(node):
+        return node[:node.rfind("_")]
+    else:
+        return False
