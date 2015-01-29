@@ -22,7 +22,7 @@ class Relay:
         return self.msg
 
     def send(self, distNode, msg):
-        send(self.net, self.create_message(self.net.myNode, distNode, self.relayNode, msg), [self.srcNode])
+        send(self.net, self.create_message(self.net.myNode, distNode, self.relayNode, msg), [self.myNode])
 
     def parse(self, msg):
         res = parser.parser(msg)
