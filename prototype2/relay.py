@@ -43,7 +43,7 @@ class Relay:
             else: # just relay
                 if self.net.debug:
                     print "relaying..."
-                send(self.net, self.create_message(self.srcNode, self.distNode, self.relayNode + [self.myNode], self.msg), ([self.srcNode] + self.relayNode))
+                send(self.net, self.create_message(self.srcNode, self.distNode, self.relayNode + [self.myNode], self.msg), ([self.srcNode] + self.relayNode + [self.myNode]))
 
 
 
