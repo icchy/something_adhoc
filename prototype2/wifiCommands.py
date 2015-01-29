@@ -31,7 +31,10 @@ def send(apName, net, host, port, msg):
         return False
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect((host, port))
+    try:
+        sock.connect((host, port))
+    except:
+        return False
     try:
         sock.sendall(msg)
     except:

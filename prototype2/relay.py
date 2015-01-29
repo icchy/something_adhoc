@@ -22,7 +22,7 @@ class Relay:
         return self.msg
 
     def send(self, distNode, msg):
-        send(self.net, self.create_message(self.net.myNode, distNode, self.relayNode, msg), [self.myNode])
+        send(self.net, self.create_message(self.net.myNode, distNode, self.relayNode, msg), [self.myNode], distNode)
 
     def parse(self, msg):
         res = parser.parser(msg)
@@ -43,11 +43,11 @@ class Relay:
             else: # just relay
                 if self.net.debug:
                     print "relaying..."
-                send(self.net, self.create_message(self.srcNode, self.distNode, self.relayNode + [self.myNode], self.msg), ([self.srcNode] + self.relayNode + [self.myNode]))
+                send(self.net, self.create_message(self.srcNode, self.distNode, self.relayNode + [self.myNode], self.msg), ([self.srcNode] + self.relayNode + [self.myNode]), self.distNode)
 
 
 
-def send(net, msg, pastNode):
+def send(net, msg, pastNode, distNode):
     try:
         strictedNode = open('strictedAddr').read().strip().split('\n')
         pastNode = pastNode + strictedNode
@@ -55,6 +55,8 @@ def send(net, msg, pastNode):
         pass
 
     aps = net.get_APs()
+    if distNode in aps and distNode not in pastNode:
+        if wifiCommands.send(distNode, net, net.default_host, net.default_port, msg): return True
     for ap in aps:
         pre = parser.get_prefix(ap)
         if ap not in pastNode and pre and pre in ap:

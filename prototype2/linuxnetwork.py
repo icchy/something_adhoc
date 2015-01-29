@@ -33,6 +33,7 @@ class LinuxNetWork(OSNetwork):
         cmds = ["service network-manager restart",
                 "service ifplugd stop"]
         execCmds_force(cmds)
+        __import__('time').sleep(1)
 
     def downAP(self):
         cmds = ["ip link set %s down"%(self.wifiInf)]
