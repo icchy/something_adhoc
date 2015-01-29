@@ -65,6 +65,7 @@ class LinuxNetWork(OSNetwork):
         cmds = ["iw dev %s ibss join %s 2412"%(self.wifiInf, adhocName)]
         execCmds(cmds)
         self.addIP("192.168.20.1")
+        __import__('time').sleep(1)
 
     def get_if(self):
         return __import__('netifaces').interfaces()
