@@ -23,11 +23,13 @@ class LinuxNetWork(OSNetwork):
     def stop_networkmng(self):
         # cmds = ["service network-manager stop"]
         # execCmds_force(cmds)
+        flag = True
         with open('/etc/NetworkManager/NetworkManager.conf') as f:
             if 'unmanaged-device=interface-name:%s'%(self.wifiInf) in f.read():
-                return
-        with open('/etc/NetworkManager/NetworkManager.conf', 'a') as f:
-            f.write('\n[keyfile]\nunmanaged-device=interface-name:%s\n'%(self.wifiInf))
+                flag = False
+        if flag:
+            with open('/etc/NetworkManager/NetworkManager.conf', 'a') as f:
+                f.write('\n[keyfile]\nunmanaged-device=interface-name:%s\n'%(self.wifiInf))
         cmds = ["service network-manager restart",
                 "service ifplugd stop"]
         execCmds_force(cmds)
