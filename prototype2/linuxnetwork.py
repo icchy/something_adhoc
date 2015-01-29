@@ -5,9 +5,8 @@ import wifi, netifaces
 class LinuxNetWork(OSNetwork):
     def __init__(self, osnetwork):
         check = self.checkRequirements()
-        self.stop_networkmng()
         self.wifiInf = osnetwork.wifiInf
-        # cmds = ["ip addr add 192.168.1.1 dev wlan0"]
+        self.stop_networkmng()
 
     def checkRequirements(self):
         # 1. run as root?
@@ -22,7 +21,15 @@ class LinuxNetWork(OSNetwork):
         assert hasWiFiInterface(self.wifiInf), self.wifiInf + " does not exits"
 
     def stop_networkmng(self):
-        cmds = ["service network-manager stop"]
+        # cmds = ["service network-manager stop"]
+        # execCmds_force(cmds)
+        with open('/etc/NetworkManager/NetworkManager.conf') as f:
+            if 'unmanaged-device=interface-name:%s'%(self.wifiInf) in f.read():
+                return
+        with open('/etc/NetworkManager/NetworkManager.conf', 'a') as f:
+            f.write('\n[keyfile]\nunmanaged-device=interface-name:%s\n'%(self.wifiInf))
+        cmds = ["service network-manager restart",
+                "service ifplugd stop"]
         execCmds_force(cmds)
 
     def downAP(self):
